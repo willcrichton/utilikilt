@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		97DE966423AB44C0875C45C5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FC41173B74535833D3ED2 /* libPods.a */; };
 		BE1E50A91860B2560051252B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50A81860B2560051252B /* Foundation.framework */; };
 		BE1E50AB1860B2560051252B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50AA1860B2560051252B /* CoreGraphics.framework */; };
 		BE1E50AD1860B2560051252B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50AC1860B2560051252B /* UIKit.framework */; };
@@ -14,7 +15,6 @@
 		BE1E50B51860B2560051252B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B41860B2560051252B /* main.m */; };
 		BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B81860B2560051252B /* CMUAppDelegate.m */; };
 		BE1E50BC1860B2560051252B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50BA1860B2560051252B /* Main.storyboard */; };
-		BE1E50BF1860B2560051252B /* CMUFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50BE1860B2560051252B /* CMUFirstViewController.m */; };
 		BE1E50C21860B2560051252B /* CMUSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50C11860B2560051252B /* CMUSecondViewController.m */; };
 		BE1E50C41860B2560051252B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50C31860B2560051252B /* Images.xcassets */; };
 		BE1E50CB1860B2560051252B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50CA1860B2560051252B /* XCTest.framework */; };
@@ -22,6 +22,8 @@
 		BE1E50CD1860B2560051252B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50AC1860B2560051252B /* UIKit.framework */; };
 		BE1E50D51860B2560051252B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50D31860B2560051252B /* InfoPlist.strings */; };
 		BE1E50D71860B2560051252B /* UtilikiltTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50D61860B2560051252B /* UtilikiltTests.m */; };
+		BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50E11860B4D90051252B /* CMUGradesViewController.m */; };
+		BE1E512C1860CE630051252B /* CMUAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E512B1860CE630051252B /* CMUAuth.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		666FC41173B74535833D3ED2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1E50A51860B2560051252B /* Utilikilt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utilikilt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1E50A81860B2560051252B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BE1E50AA1860B2560051252B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -46,8 +49,6 @@
 		BE1E50B71860B2560051252B /* CMUAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUAppDelegate.h; sourceTree = "<group>"; };
 		BE1E50B81860B2560051252B /* CMUAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUAppDelegate.m; sourceTree = "<group>"; };
 		BE1E50BB1860B2560051252B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		BE1E50BD1860B2560051252B /* CMUFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUFirstViewController.h; sourceTree = "<group>"; };
-		BE1E50BE1860B2560051252B /* CMUFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUFirstViewController.m; sourceTree = "<group>"; };
 		BE1E50C01860B2560051252B /* CMUSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUSecondViewController.h; sourceTree = "<group>"; };
 		BE1E50C11860B2560051252B /* CMUSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUSecondViewController.m; sourceTree = "<group>"; };
 		BE1E50C31860B2560051252B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -56,6 +57,11 @@
 		BE1E50D21860B2560051252B /* UtilikiltTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "UtilikiltTests-Info.plist"; sourceTree = "<group>"; };
 		BE1E50D41860B2560051252B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		BE1E50D61860B2560051252B /* UtilikiltTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UtilikiltTests.m; sourceTree = "<group>"; };
+		BE1E50E01860B4D90051252B /* CMUGradesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUGradesViewController.h; sourceTree = "<group>"; };
+		BE1E50E11860B4D90051252B /* CMUGradesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUGradesViewController.m; sourceTree = "<group>"; };
+		BE1E512A1860CE630051252B /* CMUAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUAuth.h; sourceTree = "<group>"; };
+		BE1E512B1860CE630051252B /* CMUAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUAuth.m; sourceTree = "<group>"; };
+		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,7 @@
 				BE1E50AB1860B2560051252B /* CoreGraphics.framework in Frameworks */,
 				BE1E50AD1860B2560051252B /* UIKit.framework in Frameworks */,
 				BE1E50A91860B2560051252B /* Foundation.framework in Frameworks */,
+				97DE966423AB44C0875C45C5 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +96,7 @@
 				BE1E50D01860B2560051252B /* UtilikiltTests */,
 				BE1E50A71860B2560051252B /* Frameworks */,
 				BE1E50A61860B2560051252B /* Products */,
+				D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +116,7 @@
 				BE1E50AA1860B2560051252B /* CoreGraphics.framework */,
 				BE1E50AC1860B2560051252B /* UIKit.framework */,
 				BE1E50CA1860B2560051252B /* XCTest.framework */,
+				666FC41173B74535833D3ED2 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -118,12 +127,14 @@
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
-				BE1E50BD1860B2560051252B /* CMUFirstViewController.h */,
-				BE1E50BE1860B2560051252B /* CMUFirstViewController.m */,
+				BE1E50E01860B4D90051252B /* CMUGradesViewController.h */,
+				BE1E50E11860B4D90051252B /* CMUGradesViewController.m */,
 				BE1E50C01860B2560051252B /* CMUSecondViewController.h */,
 				BE1E50C11860B2560051252B /* CMUSecondViewController.m */,
 				BE1E50C31860B2560051252B /* Images.xcassets */,
 				BE1E50AF1860B2560051252B /* Supporting Files */,
+				BE1E512A1860CE630051252B /* CMUAuth.h */,
+				BE1E512B1860CE630051252B /* CMUAuth.m */,
 			);
 			path = Utilikilt;
 			sourceTree = "<group>";
@@ -164,9 +175,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BE1E50DA1860B2560051252B /* Build configuration list for PBXNativeTarget "Utilikilt" */;
 			buildPhases = (
+				5ED9ADB1215140388BBF9DAC /* Check Pods Manifest.lock */,
 				BE1E50A11860B2560051252B /* Sources */,
 				BE1E50A21860B2560051252B /* Frameworks */,
 				BE1E50A31860B2560051252B /* Resources */,
+				4F7BC9AC50D847729C7D8290 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -250,15 +263,49 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4F7BC9AC50D847729C7D8290 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5ED9ADB1215140388BBF9DAC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		BE1E50A11860B2560051252B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */,
 				BE1E50C21860B2560051252B /* CMUSecondViewController.m in Sources */,
 				BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */,
 				BE1E50B51860B2560051252B /* main.m in Sources */,
-				BE1E50BF1860B2560051252B /* CMUFirstViewController.m in Sources */,
+				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +429,7 @@
 		};
 		BE1E50DB1860B2560051252B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -395,6 +443,7 @@
 		};
 		BE1E50DC1860B2560051252B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -467,6 +516,7 @@
 				BE1E50DC1860B2560051252B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		BE1E50DD1860B2560051252B /* Build configuration list for PBXNativeTarget "UtilikiltTests" */ = {
 			isa = XCConfigurationList;
@@ -475,6 +525,7 @@
 				BE1E50DF1860B2560051252B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
