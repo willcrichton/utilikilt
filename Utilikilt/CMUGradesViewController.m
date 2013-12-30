@@ -7,12 +7,13 @@
 //
 
 #import "CMUGradesViewController.h"
+#import "CMUDrilldownViewController.h"
 #import "CMUAuth.h"
 #import "TFHpple.h"
 
 @interface CMUGradesViewController ()
-@property NSArray* grades;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *category;
+@property NSInteger selected;
 @end
 
 @implementation CMUGradesViewController
@@ -33,7 +34,7 @@
                       action:@selector(showData)
             forControlEvents:UIControlEventValueChanged];
     
-    
+    self.selected = 0;
 }
 
 
@@ -42,19 +43,6 @@
 }
 
 - (void)showData {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSInteger idx = self.category.selectedSegmentIndex;
-    
-    if (idx == 0) {
-        self.grades = [defaults objectForKey:@"final_grades"];
-    } else if (idx == 1) {
-        //self.grades = [defaults objectForKey:@"final_grades"];
-        self.grades = [[NSArray alloc] init];
-    } else {
-        self.grades = [[NSArray alloc] init];
-        //self.grades = [defaults objectForKey:@"final_grades"];
-    }
-    
     [(UITableView*)[self view] reloadData];
 }
 
@@ -75,7 +63,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.grades count];
+    NSInteger idx = self.category.selectedSegmentIndex;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if (idx == 0) {
+        return [[defaults objectForKey:@"final_grades"] count];
+    } else if (idx == 1) {
+        return [[defaults objectForKey:@"blackboard_grades"] count];
+    } else {
+        return [[defaults objectForKey:@"autolab_grades"] count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -83,9 +80,58 @@
     static NSString *CellIdentifier = @"GradesPrototype";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text = [[self.grades objectAtIndex:indexPath.item] objectAtIndex:0];
-    cell.detailTextLabel.text = [[self.grades objectAtIndex:indexPath.item] objectAtIndex:1];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger idx = self.category.selectedSegmentIndex;
+    
+    if (idx == 0) {
+        NSArray *grades = [[defaults objectForKey:@"final_grades"] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
+            return [obj1[0] caseInsensitiveCompare:obj2[0]];
+        }];
+        
+        NSArray *entry = grades[indexPath.item];
+        cell.textLabel.text = entry[0];
+        cell.detailTextLabel.text = entry[1];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else {
+        NSDictionary *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        NSArray *keys = [[grades allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        cell.textLabel.text = [keys objectAtIndex:indexPath.item];
+        cell.detailTextLabel.text = @"";
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    }
+    
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger idx = self.category.selectedSegmentIndex;
+    if (idx == 1 || idx == 2) {
+        self.selected = indexPath.item;
+        [self performSegueWithIdentifier:@"Drilldown" sender:self];
+    }
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSInteger idx = self.category.selectedSegmentIndex;
+    
+    if (idx == 1 || idx == 2) {
+        NSDictionary *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        CMUDrilldownViewController *controller = [segue destinationViewController];
+        
+        NSDictionary *course = grades[[[grades allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)][self.selected]];
+        NSArray *hws = [[course allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+        
+        NSMutableArray *drilldown = [[NSMutableArray alloc] init];
+        for (NSString *hw in hws) {
+            [drilldown addObject:@[hw, course[hw]]];
+        }
+        
+        controller.grades = drilldown;
+    }
+    
 }
 @end

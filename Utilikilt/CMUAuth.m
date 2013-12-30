@@ -197,67 +197,91 @@
     
     __block NSURLSession *session;
     
-    void (^step2)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"Final grades: step 2");
+    NSMutableDictionary *grades = [[NSMutableDictionary alloc] init];
+    NSLock *lock = [[NSLock alloc] init];
+    
+    void (^step2)() = ^(NSData *data, NSString *course) {
+        [grades setObject:[[NSMutableDictionary alloc] init] forKey:course];
         
-        // extract grades from academic audit page
         TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
-        NSMutableArray *grades = [[NSMutableArray alloc] init];
-        for (TFHppleElement* el in [doc searchWithXPathQuery:@"//pre"]) {
-            for (NSString* line in [[el text] componentsSeparatedByString:@"\n"]) {
-                NSRegularExpression *regex =
-                [NSRegularExpression regularExpressionWithPattern:@"(\\d+-\\d+) \\w+\\s*\\'\\d+ ((\\w|\\*)+)\\s*(\\d+\\.\\d)\\s*$"
-                                                          options:NSRegularExpressionCaseInsensitive
-                                                            error:&error];
-                NSArray *matches = [regex matchesInString:line options:0 range:NSMakeRange(0, [line length])];
-                for (NSTextCheckingResult *match in matches) {
-                    NSString *class = [line substringWithRange:[match rangeAtIndex:1]];
-                    NSString *grade = [line substringWithRange:[match rangeAtIndex:2]];
-                    [grades addObject:@[class, grade]];
+        NSString *hw;
+        for (TFHppleElement* el in [doc searchWithXPathQuery:@"//div"]) {
+            NSString *class = [el objectForKey:@"class"];
+            NSString *text = [[el text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            if ([class isEqualToString:@"name"]) {
+                hw = text;
+            } else if ([class rangeOfString:@"gradeCellGrade"].location != NSNotFound) {
+                NSString *grade = text;
+                
+                NSArray *children = [el childrenWithClassName:@"outof"];
+                if ([children count] > 0) {
+                    NSString *total = [[children[0] text] substringFromIndex:1];
+                    [lock lock];
+                    [grades[course] setObject:[[NSString alloc] initWithFormat:@"%@/%@", grade, total]
+                                       forKey:hw];
+                    [lock unlock];
                 }
             }
-        }
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSArray *oldGrades = [defaults objectForKey:@"final_grades"];
-        [defaults setObject:grades forKey:@"final_grades"];
-        [defaults synchronize];
-        
-        // Show local notification for any changed grades
-        for (NSArray *grade in grades) {
-            for (NSArray *oldGrade in oldGrades){
-                if (![[oldGrade objectAtIndex: 0] isEqualToString:[grade objectAtIndex:0]]) continue;
-                if (![[oldGrade objectAtIndex: 1] isEqualToString:[grade objectAtIndex:1]]) {
-                    UILocalNotification *note = [[UILocalNotification alloc] init];
-                    note.fireDate = [NSDate date];
-                    note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@: %@",
-                                      [grade objectAtIndex:0], [grade objectAtIndex:1]];
-                    [[UIApplication sharedApplication] scheduleLocalNotification:note];
-                }
-            }
-        }
-        
-        if (handler != nil) {
-            handler(YES);
+
         }
     };
     
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSLog(@"Final grades: step 1");
+        NSLog(@"Blackboard grades: querying...");
         
-        TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
-        NSString *newUrl = @"https://enr-apps.as.cmu.edu/audit/audit?call=7";
-        for (TFHppleElement* el in [doc searchWithXPathQuery:@"//input"]) {
-            if (![[el objectForKey:@"type"] isEqualToString:@"hidden"] ||
-                [[el objectForKey:@"name"] isEqualToString:@"call"]) continue;
-            newUrl = [newUrl stringByAppendingFormat:@"&%@=%@", [el objectForKey:@"name"], [el objectForKey:@"value"]];
+        NSDictionary *bbGrades = [NSJSONSerialization JSONObjectWithData:data
+                                                                 options:kNilOptions
+                                                                   error:&error];
+        
+        if ([bbGrades[@"sv_extras"][@"sx_filters"] count] == 0) {
+            NSLog(@"Blackboard grades: failed.");
+            if (handler != nil) {
+                handler(NO);
+            }
+            return;
         }
         
-        newUrl = [newUrl stringByReplacingOccurrencesOfString:@" " withString:@"+"];
-        [[session dataTaskWithRequest:[self newRequest:newUrl] completionHandler:step2] resume];
+        dispatch_group_t group = dispatch_group_create();
+        
+        NSDictionary *bbCourses = bbGrades[@"sv_extras"][@"sx_filters"][0][@"choices"];
+        for (NSString *cid in bbCourses) {
+            NSString *course = bbCourses[cid];
+            
+            NSMutableURLRequest *request =
+            [self newRequest:[[NSString alloc] initWithFormat:@"https://blackboard.andrew.cmu.edu/webapps/bb-mygrades-BBLEARN/myGrades?course_id=%@&stream_name=mygrades", cid]];
+            
+            dispatch_group_enter(group);
+            [[session dataTaskWithRequest:request
+                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                            step2(data, course);
+                            dispatch_group_leave(group);
+                        }]
+             resume];
+
+        }
+        
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            NSLog(@"Blackboard grades: finished querying.");
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSDictionary *oldGrades = [defaults objectForKey:@"blackboard_grades"];
+            [defaults setObject:grades forKey:@"blackboard_grades"];
+            [defaults synchronize];
+            
+            for (NSString *course in grades) {
+                for (NSString *hw in grades[course]) {
+                    if (oldGrades[course][hw] == nil) {
+                        UILocalNotification *note = [[UILocalNotification alloc] init];
+                        note.fireDate = [NSDate date];
+                        note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
+                                          hw, course, grades[course][hw]];
+                        [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                    }
+                }
+            }
+        });
     };
     
-    [CMUAuth authenticate:@"https://enr-apps.as.cmu.edu/audit/audit" onAuth:^(NSURLSession *s){
+    [CMUAuth authenticate:@"https://blackboard.andrew.cmu.edu" onAuth:^(NSURLSession *s){
         if (s == nil) {
             if (handler != nil) {
                 handler(NO);
@@ -266,7 +290,11 @@
         }
         
         NSMutableURLRequest *request =
-        [self newRequest:@"https://enr-apps.as.cmu.edu/audit/audit?call=2"];
+        [self newRequest:@"https://blackboard.andrew.cmu.edu/webapps/streamViewer/streamViewer"];
+        
+        NSString *data = @"cmd=loadStream&streamName=mygrades&providers=%7B%7D&forOverview=false";
+        [request setHTTPBody:[NSData dataWithBytes:[data UTF8String] length:strlen([data UTF8String])]];
+        [request setHTTPMethod:@"POST"];
         
         session = s;
         
@@ -274,5 +302,125 @@
                     completionHandler:step1
           ] resume];
     }];
+}
+
++ (void)loadAutolabGrades:(void (^)(BOOL))handler {
+    
+    __block NSURLSession *session;
+    
+    NSMutableDictionary *grades = [[NSMutableDictionary alloc] init];
+    NSLock *lock = [[NSLock alloc] init];
+    
+    void (^step2)() = ^(NSData *data, NSString *course) {
+        [grades setObject:[[NSMutableDictionary alloc] init] forKey:course];
+        
+        TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
+        
+        NSString *hw;
+        for (TFHppleElement* el in [doc searchWithXPathQuery:@"//tr/td[1]//a | //tr/td[last()]"]) {
+            if ([[el tagName] isEqualToString:@"a"]) {
+                hw = [el text];
+            } else {
+                NSString *grade = [[NSString alloc] initWithFormat:@"%@/%@",
+                                   [[[el childrenWithTagName:@"a"] firstObject] text],
+                                   [[[el childrenWithTagName:@"span"] firstObject] text]];
+                [lock lock];
+                [grades[course] setObject:grade forKey:hw];
+                [lock unlock];
+            }
+        }
+    };
+    
+    void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"Autolab grades: querying...");
+        
+        TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
+        dispatch_group_t group = dispatch_group_create();
+        
+        for (TFHppleElement* el in [doc searchWithXPathQuery:@"//li"]) {
+            TFHppleElement *link = [[el childrenWithTagName:@"a"] lastObject];
+            NSString *course = [link text];
+            NSString *url = [[NSString alloc] initWithFormat:@"https://autolab.cs.cmu.edu%@/gradebook/student",
+                             [link objectForKey:@"href"]];
+            
+            dispatch_group_enter(group);
+            [[session dataTaskWithRequest:[self newRequest:url]
+                        completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                            step2(data, course);
+                            dispatch_group_leave(group);
+                        }]
+             resume];
+        }
+        
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            NSLog(@"Autolab grades: finished queries.");
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSDictionary *oldGrades = [defaults objectForKey:@"autolab_grades"];
+            [defaults setObject:grades forKey:@"autolab_grades"];
+            [defaults synchronize];
+            
+            for (NSString *course in grades) {
+                for (NSString *hw in grades[course]) {
+                    if (oldGrades[course][hw] == nil) {
+                        UILocalNotification *note = [[UILocalNotification alloc] init];
+                        note.fireDate = [NSDate date];
+                        note.alertBody = [[NSString alloc] initWithFormat:@"New Autolab grade for %@ (%@): %@",
+                                          hw, course, grades[course][hw]];
+                        [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                    }
+                }
+            }
+            
+            if (handler != nil) {
+                handler(YES);
+            }
+        });
+    };
+    
+    [CMUAuth authenticate:@"https://autolab.cs.cmu.edu" onAuth:^(NSURLSession *s){
+        if (s == nil) {
+            if (handler != nil) {
+                handler(NO);
+            }
+            return;
+        }
+        
+        session = s;
+        
+        [[session dataTaskWithRequest:[self newRequest:@"https://autolab.cs.cmu.edu"]
+                    completionHandler:step1
+          ] resume];
+    }];
+}
+
++ (void)loadAllGrades:(void (^)(BOOL))handler {
+    [CMUAuth authenticate:@"https://s3.as.cmu.edu/sio/index.html"
+     onAuth:^(NSURLSession *session) {
+         if (session == nil) {
+             NSLog(@"Auth failed");
+             handler(NO);
+             return;
+         }
+         
+         dispatch_group_t group = dispatch_group_create();
+         dispatch_group_enter(group);
+         [CMUAuth loadFinalGrades:^(BOOL b) {
+             dispatch_group_leave(group);
+         }];
+         
+         dispatch_group_enter(group);
+         [CMUAuth loadBlackboardGrades:^(BOOL b) {
+             dispatch_group_leave(group);
+         }];
+         
+         dispatch_group_enter(group);
+         [CMUAuth loadAutolabGrades:^(BOOL b) {
+             dispatch_group_leave(group);
+         }];
+         
+         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+             handler(YES);
+         });
+     }];
 }
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		97DE966423AB44C0875C45C5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FC41173B74535833D3ED2 /* libPods.a */; };
+		BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */; };
 		BE1E50A91860B2560051252B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50A81860B2560051252B /* Foundation.framework */; };
 		BE1E50AB1860B2560051252B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50AA1860B2560051252B /* CoreGraphics.framework */; };
 		BE1E50AD1860B2560051252B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50AC1860B2560051252B /* UIKit.framework */; };
@@ -39,6 +40,8 @@
 
 /* Begin PBXFileReference section */
 		666FC41173B74535833D3ED2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE07A3F918714CB3006AECEE /* CMUDrilldownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUDrilldownViewController.h; sourceTree = "<group>"; };
+		BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUDrilldownViewController.m; sourceTree = "<group>"; };
 		BE1E50A51860B2560051252B /* Utilikilt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utilikilt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1E50A81860B2560051252B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		BE1E50AA1860B2560051252B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -130,6 +133,8 @@
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
+				BE07A3F918714CB3006AECEE /* CMUDrilldownViewController.h */,
+				BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */,
 				BED7BD0B186E30AB0000D46A /* CMUTabViewController.h */,
 				BED7BD0C186E30AB0000D46A /* CMUTabViewController.m */,
 				BE1E50E01860B4D90051252B /* CMUGradesViewController.h */,
@@ -312,6 +317,7 @@
 				BE1E50B51860B2560051252B /* main.m in Sources */,
 				BED7BD0D186E30AB0000D46A /* CMUTabViewController.m in Sources */,
 				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
+				BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

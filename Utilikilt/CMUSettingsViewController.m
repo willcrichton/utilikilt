@@ -35,7 +35,7 @@
 
 - (IBAction)save:(id)sender {
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // hide the keyboard
     [self.password resignFirstResponder];
@@ -49,18 +49,21 @@
     [defaults setObject:password forKey:@"password"];
     [defaults synchronize];
     
-    [CMUAuth loadFinalGrades:^(BOOL didAuth) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        if (didAuth) {
-            [self dismissViewControllerAnimated:YES completion:nil];
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Authentication failed"
-                                                            message:@"Your username or password were incorrect. Please try again."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        }
+    
+    [CMUAuth loadAllGrades:^(BOOL didAuth) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hide:YES];
+            if (didAuth) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+            } else {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Authentication failed"
+                                                                message:@"Your username or password were incorrect. Please try again."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            }
+        });
     }];
 }
 

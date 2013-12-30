@@ -13,4 +13,6 @@
 + (NSMutableURLRequest*)newRequest:(NSString *)url;
 + (void)loadFinalGrades:(void (^)(BOOL))handler;
 + (void)loadBlackboardGrades:(void (^)(BOOL))handler;
++ (void)loadAutolabGrades:(void (^)(BOOL))handler;
++ (void)loadAllGrades:(void (^)(BOOL))handler;
 @end
