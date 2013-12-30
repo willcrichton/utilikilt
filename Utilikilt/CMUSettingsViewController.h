@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CMUSecondViewController : UIViewController
+@interface CMUSettingsViewController : UIViewController
 
 @end

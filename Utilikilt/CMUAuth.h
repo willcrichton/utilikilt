@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 
 @interface CMUAuth : NSObject
-@property NSURLSession *session;
 + (void) authenticate:(NSString*)url onAuth:(void (^)(NSURLSession*))handler;
++ (NSMutableURLRequest*)newRequest:(NSString *)url;
++ (void)loadFinalGrades:(void (^)(BOOL))handler;
++ (void)loadBlackboardGrades:(void (^)(BOOL))handler;
 @end

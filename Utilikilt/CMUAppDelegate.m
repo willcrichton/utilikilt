@@ -7,13 +7,45 @@
 //
 
 #import "CMUAppDelegate.h"
+#import "CMUAuth.h"
+#import "MBProgressHUD.h"
 
 @implementation CMUAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    //[NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(loadGrades) userInfo:nil repeats:YES];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"username"] == nil) {
+        [self performSelector:@selector(showSettings) withObject:nil afterDelay:0.1];
+    }
+    
+    /*
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:root.view animated:YES];
+    hud.labelText = @"Authenticating...";
+    
+    [CMUAuth authenticate:@"https://s3.as.cmu.edu/sio/index.html" onAuth:^(NSURLSession *session) {
+        [hud hide:YES];
+        if (session == nil) {
+            [root performSegueWithIdentifier:@"Settings" sender:self];
+        }
+    }];*/
+    
     return YES;
+}
+
+- (void)showSettings {
+    UIViewController *root = [[[[UIApplication sharedApplication] windows] lastObject] rootViewController];
+    [root performSegueWithIdentifier:@"Settings" sender:self];
+}
+
+- (void)loadGrades {
+    [CMUAuth loadFinalGrades:^(BOOL success) {
+        if (!success) {
+            NSLog(@"FAIL WHALE");
+        }
+    }];
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

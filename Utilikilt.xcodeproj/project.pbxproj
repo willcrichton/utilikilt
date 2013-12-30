@@ -15,7 +15,7 @@
 		BE1E50B51860B2560051252B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B41860B2560051252B /* main.m */; };
 		BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B81860B2560051252B /* CMUAppDelegate.m */; };
 		BE1E50BC1860B2560051252B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50BA1860B2560051252B /* Main.storyboard */; };
-		BE1E50C21860B2560051252B /* CMUSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50C11860B2560051252B /* CMUSecondViewController.m */; };
+		BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50C11860B2560051252B /* CMUSettingsViewController.m */; };
 		BE1E50C41860B2560051252B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50C31860B2560051252B /* Images.xcassets */; };
 		BE1E50CB1860B2560051252B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50CA1860B2560051252B /* XCTest.framework */; };
 		BE1E50CC1860B2560051252B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50A81860B2560051252B /* Foundation.framework */; };
@@ -24,6 +24,7 @@
 		BE1E50D71860B2560051252B /* UtilikiltTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50D61860B2560051252B /* UtilikiltTests.m */; };
 		BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50E11860B4D90051252B /* CMUGradesViewController.m */; };
 		BE1E512C1860CE630051252B /* CMUAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E512B1860CE630051252B /* CMUAuth.m */; };
+		BED7BD0D186E30AB0000D46A /* CMUTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BED7BD0C186E30AB0000D46A /* CMUTabViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,8 +50,8 @@
 		BE1E50B71860B2560051252B /* CMUAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUAppDelegate.h; sourceTree = "<group>"; };
 		BE1E50B81860B2560051252B /* CMUAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUAppDelegate.m; sourceTree = "<group>"; };
 		BE1E50BB1860B2560051252B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		BE1E50C01860B2560051252B /* CMUSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUSecondViewController.h; sourceTree = "<group>"; };
-		BE1E50C11860B2560051252B /* CMUSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUSecondViewController.m; sourceTree = "<group>"; };
+		BE1E50C01860B2560051252B /* CMUSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUSettingsViewController.h; sourceTree = "<group>"; };
+		BE1E50C11860B2560051252B /* CMUSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUSettingsViewController.m; sourceTree = "<group>"; };
 		BE1E50C31860B2560051252B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BE1E50C91860B2560051252B /* UtilikiltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilikiltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1E50CA1860B2560051252B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -61,6 +62,8 @@
 		BE1E50E11860B4D90051252B /* CMUGradesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUGradesViewController.m; sourceTree = "<group>"; };
 		BE1E512A1860CE630051252B /* CMUAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUAuth.h; sourceTree = "<group>"; };
 		BE1E512B1860CE630051252B /* CMUAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUAuth.m; sourceTree = "<group>"; };
+		BED7BD0B186E30AB0000D46A /* CMUTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUTabViewController.h; sourceTree = "<group>"; };
+		BED7BD0C186E30AB0000D46A /* CMUTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUTabViewController.m; sourceTree = "<group>"; };
 		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,10 +130,12 @@
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
+				BED7BD0B186E30AB0000D46A /* CMUTabViewController.h */,
+				BED7BD0C186E30AB0000D46A /* CMUTabViewController.m */,
 				BE1E50E01860B4D90051252B /* CMUGradesViewController.h */,
 				BE1E50E11860B4D90051252B /* CMUGradesViewController.m */,
-				BE1E50C01860B2560051252B /* CMUSecondViewController.h */,
-				BE1E50C11860B2560051252B /* CMUSecondViewController.m */,
+				BE1E50C01860B2560051252B /* CMUSettingsViewController.h */,
+				BE1E50C11860B2560051252B /* CMUSettingsViewController.m */,
 				BE1E50C31860B2560051252B /* Images.xcassets */,
 				BE1E50AF1860B2560051252B /* Supporting Files */,
 				BE1E512A1860CE630051252B /* CMUAuth.h */,
@@ -302,9 +307,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */,
-				BE1E50C21860B2560051252B /* CMUSecondViewController.m in Sources */,
+				BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */,
 				BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */,
 				BE1E50B51860B2560051252B /* main.m in Sources */,
+				BED7BD0D186E30AB0000D46A /* CMUTabViewController.m in Sources */,
 				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

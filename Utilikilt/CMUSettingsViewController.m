@@ -6,15 +6,18 @@
 //  Copyright (c) 2013 Will Crichton. All rights reserved.
 //
 
-#import "CMUSecondViewController.h"
+#import "CMUSettingsViewController.h"
+#import "MBProgressHUD.h"
+#import "CMUAuth.h"
+#import "CMUTabViewController.h"
 
-@interface CMUSecondViewController ()
+@interface CMUSettingsViewController ()
 @property (weak, nonatomic) IBOutlet UITextField *username;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 - (IBAction)save:(id)sender;
 @end
 
-@implementation CMUSecondViewController
+@implementation CMUSettingsViewController
 - (void)viewDidLoad
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -32,7 +35,7 @@
 
 - (IBAction)save:(id)sender {
     
-    NSLog(@"HELLO?");
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // hide the keyboard
     [self.password resignFirstResponder];
@@ -45,6 +48,20 @@
     [defaults setObject:username forKey:@"username"];
     [defaults setObject:password forKey:@"password"];
     [defaults synchronize];
+    
+    [CMUAuth loadFinalGrades:^(BOOL didAuth) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (didAuth) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Authentication failed"
+                                                            message:@"Your username or password were incorrect. Please try again."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        }
+    }];
 }
 
 
