@@ -44,7 +44,7 @@
             }
         }
         
-        TFHppleElement *el = [[doc searchWithXPathQuery:@"//form"] objectAtIndex: 0];
+        TFHppleElement *el = [[doc searchWithXPathQuery:@"//form"] firstObject];
         NSString* action = [el objectForKey:@"action"];
         
         NSString *data = @"a=b";
@@ -80,9 +80,7 @@
         // the app appears to be reusing the same session and hence we get auto-login.
         // Here, we check to see if we're already authenticated.
         if ([[[response URL] absoluteString] rangeOfString:@"SAML2"].location != NSNotFound) {
-            if (handler != nil) {
-                handler(session);
-            }
+            step2(page, response, error);
             return;
         }
         
@@ -134,7 +132,7 @@
                 }
             }
         }
-        
+       
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSArray *oldGrades = [defaults objectForKey:@"final_grades"];
         [defaults setObject:grades forKey:@"final_grades"];
@@ -186,7 +184,7 @@
             [self newRequest:@"https://enr-apps.as.cmu.edu/audit/audit?call=2"];
         
         session = s;
-                
+        
         [[session dataTaskWithRequest:request
                     completionHandler:step1
          ] resume];
@@ -267,17 +265,21 @@
             [defaults setObject:grades forKey:@"blackboard_grades"];
             [defaults synchronize];
             
-            for (NSString *course in grades) {
-                for (NSString *hw in grades[course]) {
-                    if (oldGrades[course][hw] == nil) {
-                        UILocalNotification *note = [[UILocalNotification alloc] init];
-                        note.fireDate = [NSDate date];
-                        note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
-                                          hw, course, grades[course][hw]];
-                        [[UIApplication sharedApplication] scheduleLocalNotification:note];
+            if ([oldGrades count] != 0) {
+                for (NSString *course in grades) {
+                    for (NSString *hw in grades[course]) {
+                        if (oldGrades[course][hw] == nil) {
+                            UILocalNotification *note = [[UILocalNotification alloc] init];
+                            note.fireDate = [NSDate date];
+                            note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
+                                              hw, course, grades[course][hw]];
+                            [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                        }
                     }
                 }
             }
+            
+            handler(YES);
         });
     };
     
@@ -359,17 +361,20 @@
             [defaults setObject:grades forKey:@"autolab_grades"];
             [defaults synchronize];
             
-            for (NSString *course in grades) {
-                for (NSString *hw in grades[course]) {
-                    if (oldGrades[course][hw] == nil) {
-                        UILocalNotification *note = [[UILocalNotification alloc] init];
-                        note.fireDate = [NSDate date];
-                        note.alertBody = [[NSString alloc] initWithFormat:@"New Autolab grade for %@ (%@): %@",
-                                          hw, course, grades[course][hw]];
-                        [[UIApplication sharedApplication] scheduleLocalNotification:note];
+            if ([oldGrades count] != 0) {
+                for (NSString *course in grades) {
+                    for (NSString *hw in grades[course]) {
+                        if (oldGrades[course][hw] == nil) {
+                            UILocalNotification *note = [[UILocalNotification alloc] init];
+                            note.fireDate = [NSDate date];
+                            note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
+                                              hw, course, grades[course][hw]];
+                            [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                        }
                     }
                 }
             }
+
             
             if (handler != nil) {
                 handler(YES);
@@ -397,8 +402,9 @@
     [CMUAuth authenticate:@"https://s3.as.cmu.edu/sio/index.html"
      onAuth:^(NSURLSession *session) {
          if (session == nil) {
-             NSLog(@"Auth failed");
-             handler(NO);
+             if (handler != nil) {
+                 handler(NO);
+             }
              return;
          }
          
@@ -419,7 +425,9 @@
          }];
          
          dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-             handler(YES);
+             if (handler != nil) {
+                 handler(YES);
+             }
          });
      }];
 }

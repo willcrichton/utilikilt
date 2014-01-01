@@ -14,24 +14,13 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //[NSTimer scheduledTimerWithTimeInterval:10 target:self selector:@selector(loadGrades) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(loadGrades) userInfo:nil repeats:YES];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults objectForKey:@"username"] == nil) {
         [self performSelector:@selector(showSettings) withObject:nil afterDelay:0.1];
     }
-    
-    /*
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:root.view animated:YES];
-    hud.labelText = @"Authenticating...";
-    
-    [CMUAuth authenticate:@"https://s3.as.cmu.edu/sio/index.html" onAuth:^(NSURLSession *session) {
-        [hud hide:YES];
-        if (session == nil) {
-            [root performSegueWithIdentifier:@"Settings" sender:self];
-        }
-    }];*/
-    
+
     return YES;
 }
 
@@ -41,13 +30,9 @@
 }
 
 - (void)loadGrades {
-    [CMUAuth loadFinalGrades:^(BOOL success) {
-        if (!success) {
-            NSLog(@"FAIL WHALE");
-        }
-    }];
+    [CMUAuth loadAllGrades:nil];
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
