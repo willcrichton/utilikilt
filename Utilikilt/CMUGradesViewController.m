@@ -35,6 +35,7 @@
             forControlEvents:UIControlEventValueChanged];
     
     self.selected = 0;
+    [CMUAuth getCourseInfo:@"15-213" withHandler:nil];
 }
 
 

@@ -15,4 +15,5 @@
 + (void)loadBlackboardGrades:(void (^)(BOOL))handler;
 + (void)loadAutolabGrades:(void (^)(BOOL))handler;
 + (void)loadAllGrades:(void (^)(BOOL))handler;
++ (void)getCourseInfo:(NSString*)course withHandler:(void (^)(NSDictionary*))handler;
 @end

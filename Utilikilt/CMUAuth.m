@@ -431,4 +431,41 @@
          });
      }];
 }
+
++ (void)getCourseInfo:(NSString*)course withHandler:(void (^)(NSDictionary*))handler {
+    
+    // Get FCEs
+    NSMutableURLRequest *request = [self newRequest:@"http://whichcourse.herokuapp.com/"];
+    [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPMethod:@"POST"];
+    
+    NSString *data = [[NSString alloc] initWithFormat:@"search=%@&json=true", course];
+    [request setHTTPBody:[NSData dataWithBytes:[data UTF8String] length:strlen([data UTF8String])]];
+    
+    NSURLSessionConfiguration *sessionConfig =
+    [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session =
+    [NSURLSession sessionWithConfiguration:sessionConfig];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        // json decode the data
+    }] resume];
+    
+    // Get course info from ScottyLabs
+    NSString *url = [[NSString alloc] initWithFormat:@"https://apis.scottylabs.org/v1/schedule/S14/courses/%@?app_id=1b23c940-314c-4fbb-b7aa-fdf0e533569b&app_secret_key=Y5P9oO2flrJcbHsCaQrAwKQ8fSbwwXgAkQpkw0wCy85n1zwh6283i54i",
+                     [course stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+    request = [self newRequest:url];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSDictionary *courseData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (handler != nil) {
+            if (courseData != nil) {
+                handler(courseData[@"course"]);
+            } else {
+                handler((NSDictionary*)[NSNull null]);
+            }
+        }
+    }] resume];
+}
 @end

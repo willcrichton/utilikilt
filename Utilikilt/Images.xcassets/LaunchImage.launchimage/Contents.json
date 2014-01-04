@@ -5,23 +5,20 @@
       "idiom" : "iphone",
       "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "filename" : "iOS Simulator Screen shot Dec 31, 2013, 5.31.50 PM.png",
       "scale" : "2x"
     },
     {
-      "extent" : "full-screen",
+      "orientation" : "portrait",
       "idiom" : "iphone",
-      "subtype" : "retina4",
-      "filename" : "iOS Simulator Screen shot Dec 31, 2013, 5.31.50 PM-2.png",
+      "extent" : "full-screen",
       "minimum-system-version" : "7.0",
-      "orientation" : "portrait",
+      "subtype" : "retina4",
       "scale" : "2x"
     },
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
       "extent" : "full-screen",
-      "filename" : "iOS Simulator Screen shot Dec 31, 2013, 5.31.50 PM-1.png",
       "subtype" : "retina4",
       "scale" : "2x"
     }
