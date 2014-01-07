@@ -7,6 +7,7 @@
 //
 
 #import "CMUDrilldownViewController.h"
+#import "CMUUtil.h"
 
 @interface CMUDrilldownViewController ()
 
@@ -59,8 +60,8 @@
     static NSString *CellIdentifier = @"DrilldownCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    cell.textLabel.text = self.grades[indexPath.item][0];
-    cell.detailTextLabel.text = self.grades[indexPath.item][1];
+    cell.textLabel.text = [CMUUtil truncate:self.grades[indexPath.item][@"name"] toLength:25];
+    cell.detailTextLabel.text = self.grades[indexPath.item][@"grade"];
     
     return cell;
 }

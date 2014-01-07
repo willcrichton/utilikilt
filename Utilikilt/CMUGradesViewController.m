@@ -10,9 +10,12 @@
 #import "CMUDrilldownViewController.h"
 #import "CMUAuth.h"
 #import "TFHpple.h"
+#import "MBProgressHUD.h"
+#import "CMUUtil.h"
 
 @interface CMUGradesViewController ()
 @property (weak, nonatomic) IBOutlet UISegmentedControl *category;
+- (IBAction)onRefresh:(id)sender;
 @property NSInteger selected;
 @end
 
@@ -35,7 +38,6 @@
             forControlEvents:UIControlEventValueChanged];
     
     self.selected = 0;
-    [CMUAuth getCourseInfo:@"15-213" withHandler:nil];
 }
 
 
@@ -85,24 +87,20 @@
     NSInteger idx = self.category.selectedSegmentIndex;
     
     if (idx == 0) {
-        NSArray *grades = [[defaults objectForKey:@"final_grades"] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2){
-            return [obj1[0] caseInsensitiveCompare:obj2[0]];
-        }];
-        
-        NSArray *entry = grades[indexPath.item];
-        cell.textLabel.text = entry[0];
-        cell.detailTextLabel.text = entry[1];
+        NSArray *grades = [defaults objectForKey:@"final_grades"];
+        NSDictionary *entry = grades[indexPath.item];
+        cell.textLabel.text = entry[@"course"];
+        cell.detailTextLabel.text = entry[@"grade"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType = UITableViewCellAccessoryNone;
     } else {
-        NSDictionary *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
-        NSArray *keys = [[grades allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-        cell.textLabel.text = [keys objectAtIndex:indexPath.item];
+        NSArray *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        cell.textLabel.text = [CMUUtil truncate:[grades objectAtIndex:indexPath.item][@"course"]
+                                       toLength:40];
         cell.detailTextLabel.text = @"";
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     }
-    
     
     return cell;
 }
@@ -120,19 +118,37 @@
     NSInteger idx = self.category.selectedSegmentIndex;
     
     if (idx == 1 || idx == 2) {
-        NSDictionary *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        NSArray *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
         CMUDrilldownViewController *controller = [segue destinationViewController];
-        
-        NSDictionary *course = grades[[[grades allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)][self.selected]];
-        NSArray *hws = [[course allKeys] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
-        
-        NSMutableArray *drilldown = [[NSMutableArray alloc] init];
-        for (NSString *hw in hws) {
-            [drilldown addObject:@[hw, course[hw]]];
-        }
-        
-        controller.grades = drilldown;
+        controller.grades = grades[self.selected][@"hws"];
     }
     
+}
+- (IBAction)onRefresh:(id)sender {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    void (^callback)(BOOL) = ^(BOOL worked){
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [self viewWillAppear:YES];
+        
+        if (!worked) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Fetching grades failed"
+                                                            message:@"The server failed to provide your grades. Try again in a few minutes."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+
+        }
+    };
+    
+    NSInteger idx = self.category.selectedSegmentIndex;
+    if (idx == 0) {
+        [CMUAuth loadFinalGrades:callback];
+    } else if (idx == 1) {
+        [CMUAuth loadBlackboardGrades:callback];
+    } else {
+        [CMUAuth loadAutolabGrades:callback];
+    }
 }
 @end

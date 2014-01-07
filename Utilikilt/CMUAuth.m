@@ -7,7 +7,14 @@
 //
 
 #import "CMUAuth.h"
+#import "CMUUtil.h"
 #import "TFHpple.h"
+
+/*
+ * TODO:
+ * Optimize blackboard/autolab by only fetching current (not completed) courses
+ * Figure out why/what to do when shit randomly fails
+ */
 
 @interface CMUAuth ()
 @end
@@ -128,10 +135,17 @@
                 for (NSTextCheckingResult *match in matches) {
                     NSString *class = [line substringWithRange:[match rangeAtIndex:1]];
                     NSString *grade = [line substringWithRange:[match rangeAtIndex:2]];
-                    [grades addObject:@[class, grade]];
+                    
+                    if (![grade isEqualToString:@"*"]) {
+                        [grades addObject:@{@"course":class, @"grade":grade}];
+                    }
                 }
             }
         }
+        
+        [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
+        }];
        
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSArray *oldGrades = [defaults objectForKey:@"final_grades"];
@@ -139,14 +153,16 @@
         [defaults synchronize];
         
         // Show local notification for any changed grades
-        for (NSArray *grade in grades) {
-            for (NSArray *oldGrade in oldGrades){
-                if (![[oldGrade objectAtIndex: 0] isEqualToString:[grade objectAtIndex:0]]) continue;
-                if (![[oldGrade objectAtIndex: 1] isEqualToString:[grade objectAtIndex:1]]) {
+        if ([oldGrades count] > 0) {
+            for (NSDictionary *grade in grades) {
+                for (NSDictionary *oldGrade in oldGrades) {
+                    if (![grade[@"course"] isEqualToString:oldGrade[@"course"]] ||
+                        [grade[@"grade"] isEqualToString:oldGrade[@"grade"]]) continue;
+                    
                     UILocalNotification *note = [[UILocalNotification alloc] init];
                     note.fireDate = [NSDate date];
                     note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@: %@",
-                                      [grade objectAtIndex:0], [grade objectAtIndex:1]];
+                                      grade[@"course"], grade[@"grade"]];
                     [[UIApplication sharedApplication] scheduleLocalNotification:note];
                 }
             }
@@ -195,14 +211,15 @@
     
     __block NSURLSession *session;
     
-    NSMutableDictionary *grades = [[NSMutableDictionary alloc] init];
+    NSMutableArray *grades = [[NSMutableArray alloc] init];
     NSLock *lock = [[NSLock alloc] init];
     
     void (^step2)() = ^(NSData *data, NSString *course) {
-        [grades setObject:[[NSMutableDictionary alloc] init] forKey:course];
+        NSMutableArray *hws = [[NSMutableArray alloc] init];
         
         TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
         NSString *hw;
+        [lock lock];
         for (TFHppleElement* el in [doc searchWithXPathQuery:@"//div"]) {
             NSString *class = [el objectForKey:@"class"];
             NSString *text = [[el text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -212,16 +229,20 @@
                 NSString *grade = text;
                 
                 NSArray *children = [el childrenWithClassName:@"outof"];
-                if ([children count] > 0) {
+                if ([children count] > 0 && ![hw isEqualToString:@""]) {
                     NSString *total = [[children[0] text] substringFromIndex:1];
-                    [lock lock];
-                    [grades[course] setObject:[[NSString alloc] initWithFormat:@"%@/%@", grade, total]
-                                       forKey:hw];
-                    [lock unlock];
+                    [hws addObject:@{@"name": hw,
+                                     @"grade":[[NSString alloc] initWithFormat:@"%@/%@", grade, total]}];
                 }
             }
-
         }
+        
+        [hws sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [obj1[@"name"] caseInsensitiveCompare:obj2[@"name"]];
+        }];
+        
+        [grades addObject:@{@"course": course, @"hws": hws}];
+        [lock unlock];
     };
     
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -260,22 +281,60 @@
         
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             NSLog(@"Blackboard grades: finished querying.");
+            
+            NSArray* (^getParts)(NSString*) = ^NSArray*(NSString *str) {
+                return @[[str substringToIndex:1], [str substringWithRange:NSMakeRange(1, 2)],
+                         [str substringFromIndex:3]];
+            };
+            
+            [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                NSArray *course1 = getParts(obj1[@"course"]), *course2 = getParts(obj2[@"course"]);
+                NSComparisonResult yearCmp = [course2[1] caseInsensitiveCompare:course1[1]],
+                semesterCmp = [course2[0] caseInsensitiveCompare:course1[0]],
+                nameCmp = [course2[2] caseInsensitiveCompare:course1[2]];
+                
+                if (yearCmp == NSOrderedSame) {
+                    if (semesterCmp == NSOrderedSame) {
+                        return nameCmp;
+                    } else {
+                        return semesterCmp;
+                    }
+                } else {
+                    return yearCmp;
+                }
+            }];
+            
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSDictionary *oldGrades = [defaults objectForKey:@"blackboard_grades"];
+            NSArray *oldGrades = [defaults objectForKey:@"blackboard_grades"];
             [defaults setObject:grades forKey:@"blackboard_grades"];
             [defaults synchronize];
             
             if ([oldGrades count] != 0) {
-                for (NSString *course in grades) {
-                    for (NSString *hw in grades[course]) {
-                        if (oldGrades[course][hw] == nil) {
-                            UILocalNotification *note = [[UILocalNotification alloc] init];
-                            note.fireDate = [NSDate date];
-                            note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
-                                              hw, course, grades[course][hw]];
-                            [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                for (NSDictionary *course in grades) {
+                    for (NSDictionary *oldCourse in oldGrades) {
+                        if ([oldCourse[@"course"] isEqualToString:course[@"course"]]) {
+                            for (NSDictionary *hw in course[@"hws"]) {
+                                BOOL isNew = YES;
+                                for (NSDictionary *oldHW in oldCourse[@"hws"]) {
+                                    if ([hw[@"name"] isEqualToString:oldHW[@"name"]]) {
+                                        isNew = ![hw[@"grade"] isEqualToString:oldHW[@"grade"]];
+                                    }
+                                }
+                                
+                                if (isNew) {
+                                    UILocalNotification *note = [[UILocalNotification alloc] init];
+                                    note.fireDate = [NSDate date];
+                                    note.alertBody = [[NSString alloc] initWithFormat:@"New Blackboard grade for %@ (%@): %@",
+                                                      [CMUUtil truncate:hw[@"name"] toLength:40],
+                                                      [CMUUtil truncate:course[@"course"] toLength:40],
+                                                      hw[@"grade"]];
+                                    [[UIApplication sharedApplication] scheduleLocalNotification:note];
+
+                                }
+                            }
                         }
                     }
+                    
                 }
             }
             
@@ -310,15 +369,16 @@
     
     __block NSURLSession *session;
     
-    NSMutableDictionary *grades = [[NSMutableDictionary alloc] init];
+    NSMutableArray *grades = [[NSMutableArray alloc] init];
     NSLock *lock = [[NSLock alloc] init];
     
     void (^step2)() = ^(NSData *data, NSString *course) {
-        [grades setObject:[[NSMutableDictionary alloc] init] forKey:course];
+        NSMutableArray *hws = [[NSMutableArray alloc] init];
         
         TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
         
         NSString *hw;
+        [lock lock];
         for (TFHppleElement* el in [doc searchWithXPathQuery:@"//tr/td[1]//a | //tr/td[last()]"]) {
             if ([[el tagName] isEqualToString:@"a"]) {
                 hw = [el text];
@@ -326,11 +386,20 @@
                 NSString *grade = [[NSString alloc] initWithFormat:@"%@/%@",
                                    [[[el childrenWithTagName:@"a"] firstObject] text],
                                    [[[el childrenWithTagName:@"span"] firstObject] text]];
-                [lock lock];
-                [grades[course] setObject:grade forKey:hw];
-                [lock unlock];
+                
+                if ([[[el childrenWithTagName:@"a"] firstObject] text] != nil &&
+                     [[[el childrenWithTagName:@"span"] firstObject] text] != nil) {
+                    [hws addObject:@{@"name": hw, @"grade": grade}];
+                }
             }
         }
+        
+        [hws sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [obj1[@"name"] caseInsensitiveCompare:obj2[@"name"]];
+        }];
+        
+        [grades addObject:@{@"course": course, @"hws": hws}];
+        [lock unlock];
     };
     
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
@@ -356,22 +425,42 @@
         
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             NSLog(@"Autolab grades: finished queries.");
+            
+            [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
+            }];
+            
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSDictionary *oldGrades = [defaults objectForKey:@"autolab_grades"];
+            NSArray *oldGrades = [defaults objectForKey:@"autolab_grades"];
             [defaults setObject:grades forKey:@"autolab_grades"];
             [defaults synchronize];
             
             if ([oldGrades count] != 0) {
-                for (NSString *course in grades) {
-                    for (NSString *hw in grades[course]) {
-                        if (oldGrades[course][hw] == nil) {
-                            UILocalNotification *note = [[UILocalNotification alloc] init];
-                            note.fireDate = [NSDate date];
-                            note.alertBody = [[NSString alloc] initWithFormat:@"New final grade for %@ (%@): %@",
-                                              hw, course, grades[course][hw]];
-                            [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                for (NSDictionary *course in grades) {
+                    for (NSDictionary *oldCourse in oldGrades) {
+                        if ([oldCourse[@"course"] isEqualToString:course[@"course"]]) {
+                            for (NSDictionary *hw in course[@"hws"]) {
+                                BOOL isNew = YES;
+                                for (NSDictionary *oldHW in oldCourse[@"hws"]) {
+                                    if ([hw[@"name"] isEqualToString:oldHW[@"name"]]) {
+                                        isNew = ![hw[@"grade"] isEqualToString:oldHW[@"grade"]];
+                                    }
+                                }
+                                
+                                if (isNew) {
+                                    UILocalNotification *note = [[UILocalNotification alloc] init];
+                                    note.fireDate = [NSDate date];
+                                    note.alertBody = [[NSString alloc] initWithFormat:@"New Autolab grade for %@ (%@): %@",
+                                                      [CMUUtil truncate:hw[@"name"] toLength:40],
+                                                      [CMUUtil truncate:course[@"course"] toLength:40],
+                                                      hw[@"grade"]];
+                                    [[UIApplication sharedApplication] scheduleLocalNotification:note];
+                                    
+                                }
+                            }
                         }
                     }
+                    
                 }
             }
 
@@ -434,6 +523,9 @@
 
 + (void)getCourseInfo:(NSString*)course withHandler:(void (^)(NSDictionary*))handler {
     
+    __block NSDictionary *courseData, *courseFCE;
+    dispatch_group_t group = dispatch_group_create();
+    
     // Get FCEs
     NSMutableURLRequest *request = [self newRequest:@"http://whichcourse.herokuapp.com/"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
@@ -448,24 +540,34 @@
     NSURLSession *session =
     [NSURLSession sessionWithConfiguration:sessionConfig];
     
+    dispatch_group_enter(group);
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        // json decode the data
+        courseFCE = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        dispatch_group_leave(group);
     }] resume];
     
     // Get course info from ScottyLabs
+    NSString *courseName = [course stringByReplacingOccurrencesOfString:@"-" withString:@""];
     NSString *url = [[NSString alloc] initWithFormat:@"https://apis.scottylabs.org/v1/schedule/S14/courses/%@?app_id=1b23c940-314c-4fbb-b7aa-fdf0e533569b&app_secret_key=Y5P9oO2flrJcbHsCaQrAwKQ8fSbwwXgAkQpkw0wCy85n1zwh6283i54i",
-                     [course stringByReplacingOccurrencesOfString:@"-" withString:@""]];
+                     courseName];
     request = [self newRequest:url];
     
+      dispatch_group_enter(group);
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSDictionary *courseData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        courseData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        dispatch_group_leave(group);
+    }] resume];
+    
+    dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+        NSDictionary *data = @{@"course": courseData[@"course"],
+                               @"fce": [courseFCE count] == 0 ? [NSNull null] : courseFCE[courseName]};
         if (handler != nil) {
             if (courseData != nil) {
-                handler(courseData[@"course"]);
+                handler(data);
             } else {
                 handler((NSDictionary*)[NSNull null]);
             }
         }
-    }] resume];
+    });
 }
 @end

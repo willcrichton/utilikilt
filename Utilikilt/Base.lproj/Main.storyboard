@@ -23,7 +23,7 @@
         <scene sceneID="fm5-zx-fMK">
             <objects>
                 <navigationController definesPresentationContext="YES" id="Gjx-pp-llX" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Courses" image="second" id="qcj-eH-WG4"/>
+                    <tabBarItem key="tabBarItem" title="Courses" image="literature-25" id="qcj-eH-WG4"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Dfk-s2-17v">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -47,7 +47,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number..." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number, e.g. 15-213" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
                                 <rect key="frame" x="20" y="83" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -114,7 +114,7 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CoursePrototype" rowHeight="88" id="UF4-5L-utr">
                                         <rect key="frame" x="0.0" y="22" width="320" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UF4-5L-utr">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UF4-5L-utr" id="iTT-aE-ipC">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="87"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -205,7 +205,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d29-4z-gVJ">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Andrew ID" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="d29-4z-gVJ">
                                 <rect key="frame" x="20" y="92" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -239,7 +239,7 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Settings" image="second" id="Z7h-1E-pvt"/>
-                    <navigationItem key="navigationItem" title="Settings" id="XwV-Fn-CEe"/>
+                    <navigationItem key="navigationItem" title="Login" id="XwV-Fn-CEe"/>
                     <connections>
                         <outlet property="password" destination="dSP-Pg-sbL" id="7Gc-nt-1eh"/>
                         <outlet property="username" destination="d29-4z-gVJ" id="mit-d7-vHo"/>
@@ -324,18 +324,25 @@
                             <outlet property="delegate" destination="fqu-bF-apx" id="Z4J-wO-edK"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Grades" image="first" id="gKV-D5-a7X"/>
+                    <tabBarItem key="tabBarItem" title="Grades" image="design-25" id="gKV-D5-a7X"/>
                     <navigationItem key="navigationItem" id="iZz-AL-Ktd">
                         <nil key="title"/>
-                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="wFm-49-q6U">
-                            <rect key="frame" x="35" y="6" width="251" height="32"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segments>
-                                <segment title="Final"/>
-                                <segment title="Blackboard"/>
-                                <segment title="Autolab"/>
-                            </segments>
-                        </segmentedControl>
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="PZB-fK-cCK">
+                            <segmentedControl key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="wFm-49-q6U">
+                                <rect key="frame" x="16" y="6" width="251" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="Final"/>
+                                    <segment title="Blackboard"/>
+                                    <segment title="Autolab"/>
+                                </segments>
+                            </segmentedControl>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="qWB-qi-Xcf">
+                            <connections>
+                                <action selector="onRefresh:" destination="fqu-bF-apx" id="vsb-vl-Jsz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="category" destination="wFm-49-q6U" id="rGY-04-bvs"/>
@@ -393,7 +400,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="first" width="30" height="30"/>
+        <image name="design-25" width="25" height="25"/>
+        <image name="literature-25" width="25" height="25"/>
         <image name="second" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

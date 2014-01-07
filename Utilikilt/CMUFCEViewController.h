@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface CMUFCEViewController : UITableViewController
-
+- (void)setFCEs:(NSDictionary*)fce;
 @end

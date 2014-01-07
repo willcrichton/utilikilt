@@ -30,7 +30,9 @@
 }
 
 - (void)loadGrades {
-    [CMUAuth loadAllGrades:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //[CMUAuth loadAllGrades:nil];
+    });
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

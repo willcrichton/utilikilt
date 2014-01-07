@@ -7,6 +7,7 @@
 //
 
 #import "CMUCourseDetailViewController.h"
+#import "CMUFCEViewController.h"
 
 @interface CMUCourseDetailViewController ()
 @property (weak, nonatomic) IBOutlet UILabel *ctitle;
@@ -40,10 +41,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.navigationItem.title = self.courseInfo[@"number"];
-    self.ctitle.text = self.courseInfo[@"name"];
+    self.navigationItem.title = self.courseInfo[@"course"][@"number"];
+    self.ctitle.text = self.courseInfo[@"course"][@"name"];
     self.unitsLabel.text = [[NSString alloc] initWithFormat:@"%@ units",
-                            self.courseInfo[@"units"]];
+                            self.courseInfo[@"course"][@"units"]];
 }
 
 - (void)setCourse:(NSDictionary*)course {
@@ -58,7 +59,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (sender == (id)self.fceButton) {
-        [segue destinationViewController];
+        [[segue destinationViewController] setFCEs:self.courseInfo[@"fce"]];
     }
 }
 
@@ -69,7 +70,7 @@
 }
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [self.courseInfo[@"lectures"] count];
+    return [self.courseInfo[@"course"][@"lectures"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -77,7 +78,7 @@
     static NSString *CellIdentifier = @"CoursePrototype";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 
-    NSDictionary *lecture = self.courseInfo[@"lectures"][indexPath.item];
+    NSDictionary *lecture = self.courseInfo[@"course"][@"lectures"][indexPath.item];
     
     UILabel *lecLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 300, 20)];
     [lecLabel setText:[[NSString alloc] initWithFormat:@"%@ (%@)", lecture[@"section"], lecture[@"days"]]];

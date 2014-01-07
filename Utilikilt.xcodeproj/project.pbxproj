@@ -28,6 +28,7 @@
 		BE1E50D71860B2560051252B /* UtilikiltTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50D61860B2560051252B /* UtilikiltTests.m */; };
 		BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50E11860B4D90051252B /* CMUGradesViewController.m */; };
 		BE1E512C1860CE630051252B /* CMUAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E512B1860CE630051252B /* CMUAuth.m */; };
+		BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC84674187B960800D0FDD3 /* CMUUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,8 @@
 		BE1E50E11860B4D90051252B /* CMUGradesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUGradesViewController.m; sourceTree = "<group>"; };
 		BE1E512A1860CE630051252B /* CMUAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUAuth.h; sourceTree = "<group>"; };
 		BE1E512B1860CE630051252B /* CMUAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUAuth.m; sourceTree = "<group>"; };
+		BEC84673187B960800D0FDD3 /* CMUUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUUtil.h; sourceTree = "<group>"; };
+		BEC84674187B960800D0FDD3 /* CMUUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUUtil.m; sourceTree = "<group>"; };
 		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -169,6 +172,8 @@
 				BE1E50C11860B2560051252B /* CMUSettingsViewController.m */,
 				BE1E512A1860CE630051252B /* CMUAuth.h */,
 				BE1E512B1860CE630051252B /* CMUAuth.m */,
+				BEC84673187B960800D0FDD3 /* CMUUtil.h */,
+				BEC84674187B960800D0FDD3 /* CMUUtil.m */,
 				BE1E50C31860B2560051252B /* Images.xcassets */,
 				BE1E50AF1860B2560051252B /* Supporting Files */,
 			);
@@ -343,6 +348,7 @@
 				BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */,
 				BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */,
 				BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */,
+				BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */,
 				BE1E50B51860B2560051252B /* main.m in Sources */,
 				BE1172711874BD0D003D62CE /* CMUCourseDetailViewController.m in Sources */,
 				BE11726E1874B879003D62CE /* CMUCoursesViewController.m in Sources */,
