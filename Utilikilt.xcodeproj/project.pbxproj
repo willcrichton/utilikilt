@@ -28,6 +28,7 @@
 		BE1E50D71860B2560051252B /* UtilikiltTests.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50D61860B2560051252B /* UtilikiltTests.m */; };
 		BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50E11860B4D90051252B /* CMUGradesViewController.m */; };
 		BE1E512C1860CE630051252B /* CMUAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E512B1860CE630051252B /* CMUAuth.m */; };
+		BE8719FC187CDBD30084DE08 /* CMUInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */; };
 		BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC84674187B960800D0FDD3 /* CMUUtil.m */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +75,8 @@
 		BE1E50E11860B4D90051252B /* CMUGradesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUGradesViewController.m; sourceTree = "<group>"; };
 		BE1E512A1860CE630051252B /* CMUAuth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUAuth.h; sourceTree = "<group>"; };
 		BE1E512B1860CE630051252B /* CMUAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUAuth.m; sourceTree = "<group>"; };
+		BE8719FA187CDBD30084DE08 /* CMUInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUInfoViewController.h; sourceTree = "<group>"; };
+		BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUInfoViewController.m; sourceTree = "<group>"; };
 		BEC84673187B960800D0FDD3 /* CMUUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUUtil.h; sourceTree = "<group>"; };
 		BEC84674187B960800D0FDD3 /* CMUUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUUtil.m; sourceTree = "<group>"; };
 		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -163,8 +166,9 @@
 		BE1E50AE1860B2560051252B /* Utilikilt */ = {
 			isa = PBXGroup;
 			children = (
-				BE1384361877F1A30069ED3C /* Courses */,
 				BE1384351877F1920069ED3C /* Grades */,
+				BE1384361877F1A30069ED3C /* Courses */,
+				BE8719FD187CDBE80084DE08 /* Info */,
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
@@ -207,6 +211,15 @@
 				BE1E50D31860B2560051252B /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BE8719FD187CDBE80084DE08 /* Info */ = {
+			isa = PBXGroup;
+			children = (
+				BE8719FA187CDBD30084DE08 /* CMUInfoViewController.h */,
+				BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */,
+			);
+			name = Info;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -355,6 +368,7 @@
 				BE1384391877F1F40069ED3C /* CMUFCEViewController.m in Sources */,
 				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
 				BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */,
+				BE8719FC187CDBD30084DE08 /* CMUInfoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

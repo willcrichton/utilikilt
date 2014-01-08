@@ -17,7 +17,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fFI-MB-sAS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-36" y="1126"/>
+            <point key="canvasLocation" x="-964" y="1222"/>
         </scene>
         <!--Navigation Controller - Courses-->
         <scene sceneID="fm5-zx-fMK">
@@ -247,7 +247,73 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3qq-4t-Ow8" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="445" y="1126"/>
+            <point key="canvasLocation" x="-483" y="1222"/>
+        </scene>
+        <!--Navigation Controller - Info-->
+        <scene sceneID="rew-Av-Kfm">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="DvH-lA-7Nf" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Info" image="contact_card-25" id="5jj-IQ-T1h"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="g6J-lE-hGa">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="dLt-EE-Yyd" kind="relationship" relationship="rootViewController" id="oMA-HP-Zuh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qAe-MY-11J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-36" y="1152"/>
+        </scene>
+        <!--Info View Controller - CMU Info-->
+        <scene sceneID="IwB-Zl-fB6">
+            <objects>
+                <viewController id="dLt-EE-Yyd" customClass="CMUInfoViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jFx-9c-V84"/>
+                        <viewControllerLayoutGuide type="bottom" id="gnn-Ys-wuZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="TQh-M9-hF1">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SMC #:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="edU-Rm-Dgk">
+                                <rect key="frame" x="20" y="81" width="58" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mailbox Combo:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OQJ-28-KUQ">
+                                <rect key="frame" x="20" y="110" width="127" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1234" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3d7-B7-VvB">
+                                <rect key="frame" x="86" y="81" width="39" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="53-66-55" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gde-Uy-yBi">
+                                <rect key="frame" x="155" y="110" width="71" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="CMU Info" id="ZjX-1e-9rc"/>
+                    <connections>
+                        <outlet property="mailboxLabel" destination="Gde-Uy-yBi" id="WF7-OO-nlt"/>
+                        <outlet property="smcLabel" destination="3d7-B7-VvB" id="LJn-m2-Oig"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cIS-Gh-m24" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="445" y="1152"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Vex-rW-GRa">
@@ -263,6 +329,7 @@
                         <segue destination="WJL-dS-m4W" kind="modal" identifier="Settings" modalTransitionStyle="coverVertical" id="SWV-YC-RHC"/>
                         <segue destination="pE3-5P-NOK" kind="relationship" relationship="viewControllers" id="4wm-vg-uTe"/>
                         <segue destination="Gjx-pp-llX" kind="relationship" relationship="viewControllers" id="uD8-C4-Dpx"/>
+                        <segue destination="DvH-lA-7Nf" kind="relationship" relationship="viewControllers" id="TAw-11-HNs"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNP-y4-bzi" sceneMemberID="firstResponder"/>
@@ -400,6 +467,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="contact_card-25" width="25" height="25"/>
         <image name="design-25" width="25" height="25"/>
         <image name="literature-25" width="25" height="25"/>
         <image name="second" width="30" height="30"/>

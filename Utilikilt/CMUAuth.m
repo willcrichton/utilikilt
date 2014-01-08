@@ -513,12 +513,120 @@
              dispatch_group_leave(group);
          }];
          
+         dispatch_group_enter(group);
+         [CMUAuth loadSIO:^(BOOL b) {
+             dispatch_group_leave(group);
+         }];
+         
          dispatch_group_notify(group, dispatch_get_main_queue(), ^{
              if (handler != nil) {
                  handler(YES);
              }
          });
      }];
+}
+
++ (NSArray*)getMatches:(NSString*)string withPattern:(NSString*)pattern {
+    NSError *error;
+    NSRegularExpression *regex =
+    [NSRegularExpression regularExpressionWithPattern:pattern
+                                              options:kNilOptions
+                                                error:&error];
+    return [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
+}
+
++ (void)loadSIO:(void (^)(BOOL))handler {
+    __block NSURLSession *session;
+    
+    void (^step3)() = ^(NSString *content_key) {
+        NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
+        NSLock *lock = [[NSLock alloc] init];
+        dispatch_group_t group = dispatch_group_create();
+        
+        NSMutableURLRequest *request = [self newRequest:@"https://s3.as.cmu.edu/sio/sio/bioinfo.rpc"];
+        NSString *body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.sio.student.client.serverproxy.bio.StudentBioService|fetchStudentSMCBoxInfo|1|2|3|4|0|", content_key];
+        [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:@"text/x-gwt-rpc; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+        
+        dispatch_group_enter(group);
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSString *output = [[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+                                 substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""];
+            NSArray *json = [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding]
+                                                            options:kNilOptions
+                                                              error:&error];
+            
+            [lock lock];
+            info[@"smc"] = [NSString stringWithFormat:@"%@", json[5][2]];
+            info[@"mailbox"] = [NSMutableString stringWithFormat:@"%@", json[5][1]];
+            [info[@"mailbox"] insertString:@"-" atIndex:4];
+            [info[@"mailbox"] insertString:@"-" atIndex:2];
+            [lock unlock];
+            
+            dispatch_group_leave(group);
+        }] resume];
+        
+        dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            [defaults setObject:info forKey:@"sio_info"];
+            if (handler != nil) {
+                handler(YES);
+            }
+        });
+    };
+    
+    void (^step2)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSString *page = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSArray *matches = [self getMatches:page withPattern:@"cHi='([^']+)'"];
+        NSString *context_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
+        
+        matches = [self getMatches:page withPattern:@"BMi='([^']+)'"];
+        NSString *content_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
+
+        NSMutableURLRequest *request = [self newRequest:@"https://s3.as.cmu.edu/sio/sio/userContext.rpc"];
+        NSString *body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.common.client.serverproxy.user.UserContextService|initUserContext|1|2|3|4|0|", context_key];
+        [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
+        [request setHTTPMethod:@"POST"];
+        
+        [request setValue:@"text/x-gwt-rpc; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
+        
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            step3(content_key);
+        }] resume];
+    };
+    
+    void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSLog(@"SIO: querying...");
+        
+        NSString *page = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        NSRegularExpression *regex =
+        [NSRegularExpression regularExpressionWithPattern:@"Ub='([^']+)'"
+                                                  options:kNilOptions
+                                                    error:&error];
+        NSArray *matches = [regex matchesInString:page options:0 range:NSMakeRange(0, [page length])];
+        NSString *permutation = [page substringWithRange:[matches[0] rangeAtIndex:1]];
+        
+        NSMutableURLRequest *request = [self newRequest:[[NSString alloc] initWithFormat:@"https://s3.as.cmu.edu/sio/sio/%@.cache.html", permutation]];
+        [[session dataTaskWithRequest:request completionHandler:step2] resume];
+    };
+    
+    [CMUAuth authenticate:@"https://s3.as.cmu.edu/sio/index.html" onAuth:^(NSURLSession *s){
+        if (s == nil) {
+            if (handler != nil) {
+                handler(NO);
+            }
+            return;
+        }
+        
+        session = s;
+        
+        [[session dataTaskWithRequest:[self newRequest:@"https://s3.as.cmu.edu/sio/sio/sio.nocache.js"]
+                    completionHandler:step1
+          ] resume];
+    }];
 }
 
 + (void)getCourseInfo:(NSString*)course withHandler:(void (^)(NSDictionary*))handler {
