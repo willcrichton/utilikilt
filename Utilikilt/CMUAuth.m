@@ -248,10 +248,6 @@
             }
         }
         
-        [hws sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1[@"name"] caseInsensitiveCompare:obj2[@"name"]];
-        }];
-        
         if ([hws count] > 0) {
             [grades addObject:@{@"course": course, @"hws": hws}];
         }
@@ -400,24 +396,23 @@
         [lock lock];
         for (TFHppleElement* el in [doc searchWithXPathQuery:@"//tr/td[1]//a | //tr/td[last()]"]) {
             if ([[el tagName] isEqualToString:@"a"]) {
-                hw = [el text];
+                hw = [[el text] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             } else {
                 NSString *grade = [[NSString alloc] initWithFormat:@"%@/%@",
                                    [[[el childrenWithTagName:@"a"] firstObject] text],
                                    [[[el childrenWithTagName:@"span"] firstObject] text]];
                 
                 if ([[[el childrenWithTagName:@"a"] firstObject] text] != nil &&
-                     [[[el childrenWithTagName:@"span"] firstObject] text] != nil) {
+                     [[[el childrenWithTagName:@"span"] firstObject] text] != nil &&
+                    ![hw isEqualToString:@""]) {
                     [hws addObject:@{@"name": hw, @"grade": grade}];
                 }
             }
         }
         
-        [hws sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1[@"name"] caseInsensitiveCompare:obj2[@"name"]];
-        }];
-        
-        [grades addObject:@{@"course": course, @"hws": hws}];
+        if ([hws count] > 0) {
+            [grades addObject:@{@"course": course, @"hws": hws}];
+        }
         [lock unlock];
     };
     

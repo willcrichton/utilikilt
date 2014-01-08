@@ -24,7 +24,20 @@
     self.password.text = [defaults objectForKey:@"password"];
     self.username.text = [defaults objectForKey:@"username"];
     
+    self.username.delegate = (id)self;
+    self.password.delegate = (id)self;
+        
     [super viewDidLoad];
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField*)textField {
+    if ([textField isEqual:self.username]) {
+        [self.password becomeFirstResponder];
+    } else {
+        [self save:self];
+    }
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,6 +49,8 @@
 - (IBAction)save:(id)sender {
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Loading your data...";
+    hud.detailsLabelText = @"This may take a minute. If some grades don't load (blame CMU), hit the refresh button that will show in the top right.";
     
     // hide the keyboard
     [self.password resignFirstResponder];

@@ -38,8 +38,6 @@
             forControlEvents:UIControlEventValueChanged];
     
     self.selected = 0;
-    
-    [CMUAuth loadSIO:nil];
 }
 
 
@@ -123,11 +121,13 @@
         NSArray *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
         CMUDrilldownViewController *controller = [segue destinationViewController];
         controller.grades = grades[self.selected][@"hws"];
+        controller.navigationItem.title = grades[self.selected][@"course"];
     }
     
 }
 - (IBAction)onRefresh:(id)sender {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.labelText = @"Refreshing grades...";
     
     void (^callback)(BOOL) = ^(BOOL worked){
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];

@@ -157,7 +157,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FCEPrototype" textLabel="2SJ-aF-3ap" detailTextLabel="XhW-yK-Yfn" style="IBUITableViewCellStyleValue1" id="tZd-vp-lOk">
+                            <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FCEPrototype" textLabel="2SJ-aF-3ap" detailTextLabel="XhW-yK-Yfn" style="IBUITableViewCellStyleValue1" id="tZd-vp-lOk">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tZd-vp-lOk" id="etm-H8-uza">
@@ -265,7 +265,7 @@
             </objects>
             <point key="canvasLocation" x="-36" y="1152"/>
         </scene>
-        <!--Info View Controller - CMU Info-->
+        <!--Info View Controller - Info-->
         <scene sceneID="IwB-Zl-fB6">
             <objects>
                 <viewController id="dLt-EE-Yyd" customClass="CMUInfoViewController" sceneMemberID="viewController">
@@ -305,7 +305,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="CMU Info" id="ZjX-1e-9rc"/>
+                    <navigationItem key="navigationItem" title="Info" id="ZjX-1e-9rc"/>
                     <connections>
                         <outlet property="mailboxLabel" destination="Gde-Uy-yBi" id="WF7-OO-nlt"/>
                         <outlet property="smcLabel" destination="3d7-B7-VvB" id="LJn-m2-Oig"/>
@@ -429,7 +429,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DrilldownCell" textLabel="FI7-79-qbo" detailTextLabel="FbX-SL-06I" style="IBUITableViewCellStyleValue1" id="5Bh-Sj-Kav">
+                            <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DrilldownCell" textLabel="FI7-79-qbo" detailTextLabel="FbX-SL-06I" style="IBUITableViewCellStyleValue1" id="5Bh-Sj-Kav">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5Bh-Sj-Kav" id="Ax4-jg-Bck">

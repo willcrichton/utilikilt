@@ -83,8 +83,10 @@
         cell.detailTextLabel.text = @"";
     } else {
         NSArray *entry = self.evals[indexPath.item];
+        NSString *hours = [[NSString alloc] initWithFormat:@"%.01f",
+                           [entry[1][@"hours"] floatValue]];
         cell.textLabel.text = [[NSString alloc] initWithFormat:@"%@: %@ hr/wk",
-                               entry[0], entry[1][@"hours"]];
+                               entry[0], hours];
         cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%@/100",
                                      entry[1][@"overall"]];
     }
