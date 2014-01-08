@@ -39,7 +39,7 @@
     
     self.selected = 0;
     
-    //[CMUAuth loadSIO:nil];
+    [CMUAuth loadSIO:nil];
 }
 
 

@@ -36,6 +36,7 @@
     NSURLSession *session =
     [NSURLSession sessionWithConfiguration:sessionConfig];
     
+    // Step 2 is to find the pieces of the resposne we need for Shibboleth and send 'em to the server
     void (^step2)() = ^(NSData *page, NSURLResponse *response, NSError *error) {
         TFHpple *doc = [[TFHpple alloc] initWithHTMLData:page];
     
@@ -65,16 +66,16 @@
         
         NSMutableURLRequest *request = [self newRequest:action];
         data = [data stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
-        
-        // todo: add Host field
+
+        // set headers so it seems like a reasonable packet
         [request setValue:@"https://login.cmu.edu" forHTTPHeaderField:@"Origin"];
         [request setValue:@"https://login.cmu.edu/idp/profile/SAML2/Redirect/SSO" forHTTPHeaderField:@"Referer"];
         [request setValue:@"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.14 Safari/537.36" forHTTPHeaderField:@"User-Agent"];
         [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody:[NSData dataWithBytes:[data UTF8String] length:strlen([data UTF8String])]];
-        
         [request setHTTPMethod:@"POST"];
         
+        // Once the server has given us the proper cookies, we're good to go with the current session
         [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             if (handler != nil) {
                 handler(session);
@@ -82,7 +83,9 @@
         }] resume];
     };
     
+    // Step 1 is to send our username/password to the server
     void (^step1)() = ^(NSData *page, NSURLResponse *response, NSError *error) {
+        
         // For an unknown reason, despite allocating a new session in each authenticate call,
         // the app appears to be reusing the same session and hence we get auto-login.
         // Here, we check to see if we're already authenticated.
@@ -116,9 +119,9 @@
 
 + (void)loadFinalGrades:(void (^)(BOOL))handler {
     
-    // LOL BLOCK VARIABLES WUT
     __block NSURLSession *session;
     
+    // Step 2 is to get the HTML content of the audit for main major and scrape the grades
     void (^step2)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Final grades: step 2");
         
@@ -143,6 +146,7 @@
             }
         }
         
+        // sort in ascending order by course name
         [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
         }];
@@ -173,6 +177,7 @@
         }
     };
     
+    // Step 1 is to get the options page of academic audit and determine our main major
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Final grades: step 1");
         
@@ -214,11 +219,17 @@
     NSMutableArray *grades = [[NSMutableArray alloc] init];
     NSLock *lock = [[NSLock alloc] init];
     
+    // Note: for this and Autolab, the "step1/step2" is just following my convention.
+    // There's actually many step2 calls for every course that we evaluate. Surprise!
+    
+    // Step 2 is to scrape a course's grades off of its blackboard page
     void (^step2)() = ^(NSData *data, NSString *course) {
         NSMutableArray *hws = [[NSMutableArray alloc] init];
         
         TFHpple *doc = [[TFHpple alloc] initWithHTMLData:data];
         NSString *hw;
+        
+        // do we actually need a lock on the MutableArray? not sure. is it thread safe? probably not
         [lock lock];
         for (TFHppleElement* el in [doc searchWithXPathQuery:@"//div"]) {
             NSString *class = [el objectForKey:@"class"];
@@ -241,10 +252,13 @@
             return [obj1[@"name"] caseInsensitiveCompare:obj2[@"name"]];
         }];
         
-        [grades addObject:@{@"course": course, @"hws": hws}];
+        if ([hws count] > 0) {
+            [grades addObject:@{@"course": course, @"hws": hws}];
+        }
         [lock unlock];
     };
     
+    // Step 1 is to get the list of courses the user is taking on blackboard
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"Blackboard grades: querying...");
         
@@ -279,6 +293,7 @@
 
         }
         
+        // once all our results are combined, sort/save the results
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             NSLog(@"Blackboard grades: finished querying.");
             
@@ -309,6 +324,7 @@
             [defaults setObject:grades forKey:@"blackboard_grades"];
             [defaults synchronize];
             
+            // i hate myself for this code O(n^2) code block
             if ([oldGrades count] != 0) {
                 for (NSDictionary *course in grades) {
                     for (NSDictionary *oldCourse in oldGrades) {
@@ -371,6 +387,9 @@
     
     NSMutableArray *grades = [[NSMutableArray alloc] init];
     NSLock *lock = [[NSLock alloc] init];
+    
+    // This is basically the same process as getting Blackboard grades,
+    // except the URLs change and the scraping is a little different.
     
     void (^step2)() = ^(NSData *data, NSString *course) {
         NSMutableArray *hws = [[NSMutableArray alloc] init];
@@ -526,6 +545,9 @@
      }];
 }
 
+// helper functions for getting SIO datas //
+
+// shorthand for parsing a string w/ regex
 + (NSArray*)getMatches:(NSString*)string withPattern:(NSString*)pattern {
     NSError *error;
     NSRegularExpression *regex =
@@ -535,9 +557,20 @@
     return [regex matchesInString:string options:0 range:NSMakeRange(0, [string length])];
 }
 
+// turn a GWT RPC (Google Web Toolkit + Remote Procedure Call) response into JSON
++ (NSArray*)parseGWT:(NSData*)data {
+    NSError *error;
+    NSString *output = [[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+                         substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""];
+    return [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding]
+                                                    options:kNilOptions
+                                                      error:&error];
+}
+
 + (void)loadSIO:(void (^)(BOOL))handler {
     __block NSURLSession *session;
     
+    // here we do the gruntwork: do all the RPC calls, extract the necessary data
     void (^step3)() = ^(NSString *content_key) {
         NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
         NSLock *lock = [[NSLock alloc] init];
@@ -551,11 +584,7 @@
         
         dispatch_group_enter(group);
         [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            NSString *output = [[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
-                                 substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""];
-            NSArray *json = [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding]
-                                                            options:kNilOptions
-                                                              error:&error];
+            NSArray *json = [self parseGWT:data];
             
             [lock lock];
             info[@"smc"] = [NSString stringWithFormat:@"%@", json[5][2]];
@@ -566,7 +595,7 @@
             
             dispatch_group_leave(group);
         }] resume];
-        
+            
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
             [defaults setObject:info forKey:@"sio_info"];
@@ -576,6 +605,7 @@
         });
     };
     
+    // Find our various RPC keys within the document and set up system by querying userContext.rpc
     void (^step2)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSString *page = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
@@ -597,6 +627,7 @@
         }] resume];
     };
     
+    // Start by getting the GWT-Permutation cache.html file with our RPC keys
     void (^step1)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSLog(@"SIO: querying...");
         
@@ -634,7 +665,7 @@
     __block NSDictionary *courseData, *courseFCE;
     dispatch_group_t group = dispatch_group_create();
     
-    // Get FCEs
+    // Get FCEs from WhichCourse (courtesy Yashas Kumar)
     NSMutableURLRequest *request = [self newRequest:@"http://whichcourse.herokuapp.com/"];
     [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPMethod:@"POST"];
@@ -660,7 +691,7 @@
                      courseName];
     request = [self newRequest:url];
     
-      dispatch_group_enter(group);
+    dispatch_group_enter(group);
     [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         courseData = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
         dispatch_group_leave(group);

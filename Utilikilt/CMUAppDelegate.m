@@ -31,7 +31,7 @@
 
 - (void)loadGrades {
     dispatch_async(dispatch_get_main_queue(), ^{
-        //[CMUAuth loadAllGrades:nil];
+        [CMUAuth loadAllGrades:nil];
     });
 }
 
