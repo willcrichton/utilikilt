@@ -9,6 +9,7 @@
 #import "CMUAuth.h"
 #import "CMUUtil.h"
 #import "TFHpple.h"
+#import "MXLCalendarManager.h"
 
 /*
  * TODO:
@@ -150,12 +151,11 @@
         [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
         }];
-       
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSArray *oldGrades = [defaults objectForKey:@"final_grades"];
-        [defaults setObject:grades forKey:@"final_grades"];
-        [defaults synchronize];
         
+        //store the array
+        NSArray *oldGrades = [CMUUtil load:@"final_grades"];
+        [CMUUtil save:grades toPath:@"final_grades"];
+      
         // Show local notification for any changed grades
         if ([oldGrades count] > 0) {
             for (NSDictionary *grade in grades) {
@@ -315,11 +315,9 @@
                 }
             }];
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSArray *oldGrades = [defaults objectForKey:@"blackboard_grades"];
-            [defaults setObject:grades forKey:@"blackboard_grades"];
-            [defaults synchronize];
-            
+            NSArray *oldGrades = [CMUUtil load:@"blackboard_grades"];
+            [CMUUtil save:grades toPath:@"blackboard_grades"];
+
             // i hate myself for this code O(n^2) code block
             if ([oldGrades count] != 0) {
                 for (NSDictionary *course in grades) {
@@ -444,10 +442,8 @@
                 return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
             }];
             
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            NSArray *oldGrades = [defaults objectForKey:@"autolab_grades"];
-            [defaults setObject:grades forKey:@"autolab_grades"];
-            [defaults synchronize];
+            NSArray *oldGrades = [CMUUtil load:@"autolab_grades"];
+            [CMUUtil save:grades toPath:@"autolab_grades"];
             
             if ([oldGrades count] != 0) {
                 for (NSDictionary *course in grades) {
@@ -555,8 +551,9 @@
 // turn a GWT RPC (Google Web Toolkit + Remote Procedure Call) response into JSON
 + (NSArray*)parseGWT:(NSData*)data {
     NSError *error;
-    NSString *output = [[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
-                         substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""];
+    NSString *output = [[[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+                         substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""]
+                          stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     return [NSJSONSerialization JSONObjectWithData:[output dataUsingEncoding:NSUTF8StringEncoding]
                                                     options:kNilOptions
                                                       error:&error];
@@ -564,13 +561,15 @@
 
 + (void)loadSIO:(void (^)(BOOL))handler {
     __block NSURLSession *session;
+    __block NSDictionary *dayMap = @{@"MO": @1, @"TU": @2, @"WE": @3, @"TH": @4, @"FR": @5};
     
     // here we do the gruntwork: do all the RPC calls, extract the necessary data
-    void (^step3)() = ^(NSString *content_key) {
+    void (^step3)() = ^(NSString *content_key, NSString *schedule_key) {
         NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
         NSLock *lock = [[NSLock alloc] init];
         dispatch_group_t group = dispatch_group_create();
         
+        // SMC + mailbox combo
         NSMutableURLRequest *request = [self newRequest:@"https://s3.as.cmu.edu/sio/sio/bioinfo.rpc"];
         NSString *body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.sio.student.client.serverproxy.bio.StudentBioService|fetchStudentSMCBoxInfo|1|2|3|4|0|", content_key];
         [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
@@ -590,10 +589,63 @@
             
             dispatch_group_leave(group);
         }] resume];
+        
+        
+        // Student ID + card number
+        body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.sio.student.client.serverproxy.bio.StudentBioService|fetchStudentCardInfo|1|2|3|4|0|", content_key];
+        [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
+        
+        dispatch_group_enter(group);
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSArray *json = [self parseGWT:data];
             
+            [lock lock];
+            info[@"card_id"] = json[5][1];
+            // fun fact: json[5][3], or your student ID, is your SSN.
+            // probably don't want to display that
+            [lock unlock];
+            
+            dispatch_group_leave(group);
+        }] resume];
+        
+        
+        // Schedule
+        [request setURL:[NSURL URLWithString:@"https://s3.as.cmu.edu/sio/export/schedule/S14_semester.ics?semester=S14"]];
+        
+        dispatch_group_enter(group);
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            MXLCalendarManager *manager = [[MXLCalendarManager alloc] init];
+            [manager parseICSString:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+              withCompletionHandler:^(MXLCalendar *calendar, NSError *err) {
+                  info[@"schedule"] = [[NSMutableArray alloc] init];
+                  
+                  for (MXLCalendarEvent *event in calendar.events) {
+                      // event.eventSummary is "Course Name :: ##### A/B"
+                      // event.eventLocation is "CODE - ROOM"
+                      
+                      NSArray *days = [[[event.rruleString componentsSeparatedByString:@"="] lastObject]
+                                       componentsSeparatedByString:@","];
+                      
+                      NSMutableArray *dayNums = [[NSMutableArray alloc] init];
+                      for (NSString *day in days) {
+                          [dayNums addObject:dayMap[day]];
+                      }
+                      
+                      NSString *location = [event.eventLocation stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                      
+                      [info[@"schedule"] addObject:@{@"name": event.eventSummary,
+                                                     @"location": location,
+                                                     @"days": dayNums,
+                                                     @"start_time": event.eventStartDate,
+                                                     @"end_time": event.eventEndDate}];
+                  }
+                  
+                  dispatch_group_leave(group);
+              }];
+        }] resume];
+        
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-            [defaults setObject:info forKey:@"sio_info"];
+            [CMUUtil save:info toPath:@"sio_info"];
             if (handler != nil) {
                 handler(YES);
             }
@@ -609,6 +661,9 @@
         
         matches = [self getMatches:page withPattern:@"BMi='([^']+)'"];
         NSString *content_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
+        
+        matches = [self getMatches:page withPattern:@"KRi='([^']+)'"];
+        NSString *schedule_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
 
         NSMutableURLRequest *request = [self newRequest:@"https://s3.as.cmu.edu/sio/sio/userContext.rpc"];
         NSString *body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.common.client.serverproxy.user.UserContextService|initUserContext|1|2|3|4|0|", context_key];
@@ -618,7 +673,7 @@
         [request setValue:@"text/x-gwt-rpc; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
         
         [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            step3(content_key);
+            step3(content_key, schedule_key);
         }] resume];
     };
     
@@ -633,6 +688,14 @@
                                                   options:kNilOptions
                                                     error:&error];
         NSArray *matches = [regex matchesInString:page options:0 range:NSMakeRange(0, [page length])];
+        
+        if ([matches count] == 0) {
+            if (handler != nil) {
+                handler(NO);
+            }
+            return;
+        }
+        
         NSString *permutation = [page substringWithRange:[matches[0] rangeAtIndex:1]];
         
         NSMutableURLRequest *request = [self newRequest:[[NSString alloc] initWithFormat:@"https://s3.as.cmu.edu/sio/sio/%@.cache.html", permutation]];
@@ -703,5 +766,24 @@
             }
         }
     });
+}
+
++ (void)finger:(NSString *)andrew withHandler:(void (^)(NSArray *))handler {
+    
+    NSString *url = [[NSString alloc] initWithFormat:@"http://willcrichton.net/finger.php?andrew=%@", andrew];
+    NSMutableURLRequest *request = [self newRequest: url];
+    
+    NSURLSessionConfiguration *sessionConfig =
+    [NSURLSessionConfiguration defaultSessionConfiguration];
+    
+    NSURLSession *session =
+    [NSURLSession sessionWithConfiguration:sessionConfig];
+    
+    [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSArray *userInfo = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (handler != nil) {
+            handler(userInfo);
+        }
+    }] resume];
 }
 @end

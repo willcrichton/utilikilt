@@ -42,7 +42,7 @@
 - (void)doSearch {
     [self.courseField resignFirstResponder];
 
-    NSString *course = self.courseField.text;
+    NSString *course = [self.courseField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     [CMUAuth getCourseInfo:course withHandler:^(NSDictionary *courseInfo) {
         dispatch_async(dispatch_get_main_queue(), ^{

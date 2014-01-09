@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		97DE966423AB44C0875C45C5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FC41173B74535833D3ED2 /* libPods.a */; };
 		BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */; };
-		BE11726E1874B879003D62CE /* CMUCoursesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE11726D1874B879003D62CE /* CMUCoursesViewController.m */; };
 		BE1172711874BD0D003D62CE /* CMUCourseDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1172701874BD0D003D62CE /* CMUCourseDetailViewController.m */; };
 		BE1384391877F1F40069ED3C /* CMUFCEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1384381877F1F40069ED3C /* CMUFCEViewController.m */; };
 		BE1E50A91860B2560051252B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50A81860B2560051252B /* Foundation.framework */; };
@@ -29,7 +28,13 @@
 		BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50E11860B4D90051252B /* CMUGradesViewController.m */; };
 		BE1E512C1860CE630051252B /* CMUAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E512B1860CE630051252B /* CMUAuth.m */; };
 		BE8719FC187CDBD30084DE08 /* CMUInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */; };
+		BE88D0F3187E24A900EC71C3 /* CMUFingerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0F2187E24A900EC71C3 /* CMUFingerViewController.m */; };
+		BE88D0FD187E490C00EC71C3 /* MXLCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0F6187E490C00EC71C3 /* MXLCalendar.m */; };
+		BE88D0FE187E490C00EC71C3 /* MXLCalendarEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0F8187E490C00EC71C3 /* MXLCalendarEvent.m */; };
+		BE88D0FF187E490C00EC71C3 /* MXLCalendarManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0FA187E490C00EC71C3 /* MXLCalendarManager.m */; };
+		BE88D100187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0FC187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m */; };
 		BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC84674187B960800D0FDD3 /* CMUUtil.m */; };
+		BEEDF0C0187F318300E01663 /* CMUCoursesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEEDF0BF187F318300E01663 /* CMUCoursesViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,8 +51,6 @@
 		666FC41173B74535833D3ED2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE07A3F918714CB3006AECEE /* CMUDrilldownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUDrilldownViewController.h; sourceTree = "<group>"; };
 		BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUDrilldownViewController.m; sourceTree = "<group>"; };
-		BE11726C1874B879003D62CE /* CMUCoursesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CMUCoursesViewController.h; path = ../CMUCoursesViewController.h; sourceTree = "<group>"; };
-		BE11726D1874B879003D62CE /* CMUCoursesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CMUCoursesViewController.m; path = ../CMUCoursesViewController.m; sourceTree = "<group>"; };
 		BE11726F1874BD0D003D62CE /* CMUCourseDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUCourseDetailViewController.h; sourceTree = "<group>"; };
 		BE1172701874BD0D003D62CE /* CMUCourseDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUCourseDetailViewController.m; sourceTree = "<group>"; };
 		BE1384371877F1F40069ED3C /* CMUFCEViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUFCEViewController.h; sourceTree = "<group>"; };
@@ -77,8 +80,20 @@
 		BE1E512B1860CE630051252B /* CMUAuth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUAuth.m; sourceTree = "<group>"; };
 		BE8719FA187CDBD30084DE08 /* CMUInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUInfoViewController.h; sourceTree = "<group>"; };
 		BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUInfoViewController.m; sourceTree = "<group>"; };
+		BE88D0F1187E24A900EC71C3 /* CMUFingerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUFingerViewController.h; sourceTree = "<group>"; };
+		BE88D0F2187E24A900EC71C3 /* CMUFingerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUFingerViewController.m; sourceTree = "<group>"; };
+		BE88D0F5187E490C00EC71C3 /* MXLCalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MXLCalendar.h; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendar.h"; sourceTree = "<group>"; };
+		BE88D0F6187E490C00EC71C3 /* MXLCalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MXLCalendar.m; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendar.m"; sourceTree = "<group>"; };
+		BE88D0F7187E490C00EC71C3 /* MXLCalendarEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MXLCalendarEvent.h; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendarEvent.h"; sourceTree = "<group>"; };
+		BE88D0F8187E490C00EC71C3 /* MXLCalendarEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MXLCalendarEvent.m; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendarEvent.m"; sourceTree = "<group>"; };
+		BE88D0F9187E490C00EC71C3 /* MXLCalendarManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MXLCalendarManager.h; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendarManager.h"; sourceTree = "<group>"; };
+		BE88D0FA187E490C00EC71C3 /* MXLCalendarManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MXLCalendarManager.m; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/MXLCalendarManager.m"; sourceTree = "<group>"; };
+		BE88D0FB187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSTimeZone+ProperAbbreviation.h"; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/NSTimeZone+ProperAbbreviation.h"; sourceTree = "<group>"; };
+		BE88D0FC187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSTimeZone+ProperAbbreviation.m"; path = "../../../../Downloads/MXLCalendarManager-master/MXLCalendarManager/NSTimeZone+ProperAbbreviation.m"; sourceTree = "<group>"; };
 		BEC84673187B960800D0FDD3 /* CMUUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUUtil.h; sourceTree = "<group>"; };
 		BEC84674187B960800D0FDD3 /* CMUUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUUtil.m; sourceTree = "<group>"; };
+		BEEDF0BE187F318300E01663 /* CMUCoursesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUCoursesViewController.h; sourceTree = "<group>"; };
+		BEEDF0BF187F318300E01663 /* CMUCoursesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUCoursesViewController.m; sourceTree = "<group>"; };
 		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,8 +136,8 @@
 		BE1384361877F1A30069ED3C /* Courses */ = {
 			isa = PBXGroup;
 			children = (
-				BE11726C1874B879003D62CE /* CMUCoursesViewController.h */,
-				BE11726D1874B879003D62CE /* CMUCoursesViewController.m */,
+				BEEDF0BE187F318300E01663 /* CMUCoursesViewController.h */,
+				BEEDF0BF187F318300E01663 /* CMUCoursesViewController.m */,
 				BE11726F1874BD0D003D62CE /* CMUCourseDetailViewController.h */,
 				BE1172701874BD0D003D62CE /* CMUCourseDetailViewController.m */,
 				BE1384371877F1F40069ED3C /* CMUFCEViewController.h */,
@@ -166,6 +181,7 @@
 		BE1E50AE1860B2560051252B /* Utilikilt */ = {
 			isa = PBXGroup;
 			children = (
+				BE88D0F4187E48FD00EC71C3 /* MXLCalendar */,
 				BE1384351877F1920069ED3C /* Grades */,
 				BE1384361877F1A30069ED3C /* Courses */,
 				BE8719FD187CDBE80084DE08 /* Info */,
@@ -218,8 +234,25 @@
 			children = (
 				BE8719FA187CDBD30084DE08 /* CMUInfoViewController.h */,
 				BE8719FB187CDBD30084DE08 /* CMUInfoViewController.m */,
+				BE88D0F1187E24A900EC71C3 /* CMUFingerViewController.h */,
+				BE88D0F2187E24A900EC71C3 /* CMUFingerViewController.m */,
 			);
 			name = Info;
+			sourceTree = "<group>";
+		};
+		BE88D0F4187E48FD00EC71C3 /* MXLCalendar */ = {
+			isa = PBXGroup;
+			children = (
+				BE88D0F5187E490C00EC71C3 /* MXLCalendar.h */,
+				BE88D0F6187E490C00EC71C3 /* MXLCalendar.m */,
+				BE88D0F7187E490C00EC71C3 /* MXLCalendarEvent.h */,
+				BE88D0F8187E490C00EC71C3 /* MXLCalendarEvent.m */,
+				BE88D0F9187E490C00EC71C3 /* MXLCalendarManager.h */,
+				BE88D0FA187E490C00EC71C3 /* MXLCalendarManager.m */,
+				BE88D0FB187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.h */,
+				BE88D0FC187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m */,
+			);
+			name = MXLCalendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -361,14 +394,19 @@
 				BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */,
 				BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */,
 				BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */,
+				BEEDF0C0187F318300E01663 /* CMUCoursesViewController.m in Sources */,
+				BE88D0F3187E24A900EC71C3 /* CMUFingerViewController.m in Sources */,
 				BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */,
 				BE1E50B51860B2560051252B /* main.m in Sources */,
 				BE1172711874BD0D003D62CE /* CMUCourseDetailViewController.m in Sources */,
-				BE11726E1874B879003D62CE /* CMUCoursesViewController.m in Sources */,
+				BE88D0FF187E490C00EC71C3 /* MXLCalendarManager.m in Sources */,
+				BE88D0FD187E490C00EC71C3 /* MXLCalendar.m in Sources */,
 				BE1384391877F1F40069ED3C /* CMUFCEViewController.m in Sources */,
+				BE88D0FE187E490C00EC71C3 /* MXLCalendarEvent.m in Sources */,
 				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
 				BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */,
 				BE8719FC187CDBD30084DE08 /* CMUInfoViewController.m in Sources */,
+				BE88D100187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

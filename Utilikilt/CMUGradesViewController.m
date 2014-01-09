@@ -67,14 +67,13 @@
 {
     // Return the number of rows in the section.
     NSInteger idx = self.category.selectedSegmentIndex;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     if (idx == 0) {
-        return [[defaults objectForKey:@"final_grades"] count];
+        return [[CMUUtil load:@"final_grades"] count];
     } else if (idx == 1) {
-        return [[defaults objectForKey:@"blackboard_grades"] count];
+        return [[CMUUtil load:@"blackboard_grades"] count];
     } else {
-        return [[defaults objectForKey:@"autolab_grades"] count];
+        return [[CMUUtil load:@"autolab_grades"] count];
     }
 }
 
@@ -83,18 +82,17 @@
     static NSString *CellIdentifier = @"GradesPrototype";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger idx = self.category.selectedSegmentIndex;
     
     if (idx == 0) {
-        NSArray *grades = [defaults objectForKey:@"final_grades"];
+        NSArray *grades = [CMUUtil load:@"final_grades"];
         NSDictionary *entry = grades[indexPath.item];
         cell.textLabel.text = entry[@"course"];
         cell.detailTextLabel.text = entry[@"grade"];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType = UITableViewCellAccessoryNone;
     } else {
-        NSArray *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        NSArray *grades = [CMUUtil load:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
         cell.textLabel.text = [CMUUtil truncate:[grades objectAtIndex:indexPath.item][@"course"]
                                        toLength:40];
         cell.detailTextLabel.text = @"";
@@ -114,11 +112,10 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSInteger idx = self.category.selectedSegmentIndex;
     
     if (idx == 1 || idx == 2) {
-        NSArray *grades = [defaults objectForKey:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
+        NSArray *grades = [CMUUtil load:(idx == 1 ? @"blackboard_grades" : @"autolab_grades")];
         CMUDrilldownViewController *controller = [segue destinationViewController];
         controller.grades = grades[self.selected][@"hws"];
         controller.navigationItem.title = grades[self.selected][@"course"];
@@ -130,18 +127,20 @@
     hud.labelText = @"Refreshing grades...";
     
     void (^callback)(BOOL) = ^(BOOL worked){
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        [self viewWillAppear:YES];
-        
-        if (!worked) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Fetching grades failed"
-                                                            message:@"The server failed to provide your grades. Try again in a few minutes."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            [self viewWillAppear:YES];
+            
+            if (!worked) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Fetching grades failed"
+                                                                message:@"The server failed to provide your grades. Try again in a few minutes."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+                
+            }
+        });
     };
     
     NSInteger idx = self.category.selectedSegmentIndex;

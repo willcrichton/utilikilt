@@ -17,4 +17,5 @@
 + (void)loadAllGrades:(void (^)(BOOL))handler;
 + (void)loadSIO:(void (^)(BOOL))handler;
 + (void)getCourseInfo:(NSString*)course withHandler:(void (^)(NSDictionary*))handler;
++ (void)finger:(NSString*)andrew withHandler:(void (^)(NSArray*))handler;
 @end

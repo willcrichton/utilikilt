@@ -18,4 +18,14 @@
     return str;
 }
 
++ (id)load:(NSString*)path {
+    NSString *abspath = [[NSString alloc] initWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path];
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:abspath];
+}
+
++ (void)save:(id)obj toPath:(NSString*)path {
+    NSString *abspath = [[NSString alloc] initWithFormat:@"%@/Documents/%@", NSHomeDirectory(), path];
+    [NSKeyedArchiver archiveRootObject:obj toFile:abspath];
+}
+
 @end

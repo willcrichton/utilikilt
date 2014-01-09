@@ -41,7 +41,9 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.navigationItem.title = self.courseInfo[@"course"][@"number"];
+    NSMutableString *number = [[NSMutableString alloc] initWithString:self.courseInfo[@"course"][@"number"]];
+    [number insertString:@"-" atIndex:2];
+    self.navigationItem.title = number;
     self.ctitle.text = self.courseInfo[@"course"][@"name"];
     self.unitsLabel.text = [[NSString alloc] initWithFormat:@"%@ units",
                             self.courseInfo[@"course"][@"units"]];

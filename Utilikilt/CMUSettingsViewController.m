@@ -58,7 +58,7 @@
     
     NSString *username = [self.username text];
     NSString *password = [self.password text];
-    
+       
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:username forKey:@"username"];
     [defaults setObject:password forKey:@"password"];
