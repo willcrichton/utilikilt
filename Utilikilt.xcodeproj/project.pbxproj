@@ -35,6 +35,7 @@
 		BE88D100187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m in Sources */ = {isa = PBXBuildFile; fileRef = BE88D0FC187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m */; };
 		BEC84675187B960800D0FDD3 /* CMUUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = BEC84674187B960800D0FDD3 /* CMUUtil.m */; };
 		BEEDF0C0187F318300E01663 /* CMUCoursesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEEDF0BF187F318300E01663 /* CMUCoursesViewController.m */; };
+		BEEDF0C4187F746200E01663 /* CMUFinancesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BEEDF0C3187F746200E01663 /* CMUFinancesViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,8 @@
 		BEC84674187B960800D0FDD3 /* CMUUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUUtil.m; sourceTree = "<group>"; };
 		BEEDF0BE187F318300E01663 /* CMUCoursesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUCoursesViewController.h; sourceTree = "<group>"; };
 		BEEDF0BF187F318300E01663 /* CMUCoursesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUCoursesViewController.m; sourceTree = "<group>"; };
+		BEEDF0C2187F746200E01663 /* CMUFinancesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUFinancesViewController.h; sourceTree = "<group>"; };
+		BEEDF0C3187F746200E01663 /* CMUFinancesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUFinancesViewController.m; sourceTree = "<group>"; };
 		D6B7D915AD9C463FAA02F9B3 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,10 +184,10 @@
 		BE1E50AE1860B2560051252B /* Utilikilt */ = {
 			isa = PBXGroup;
 			children = (
-				BE88D0F4187E48FD00EC71C3 /* MXLCalendar */,
 				BE1384351877F1920069ED3C /* Grades */,
 				BE1384361877F1A30069ED3C /* Courses */,
 				BE8719FD187CDBE80084DE08 /* Info */,
+				BEEDF0C1187F742F00E01663 /* Finances */,
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
@@ -195,6 +198,7 @@
 				BEC84673187B960800D0FDD3 /* CMUUtil.h */,
 				BEC84674187B960800D0FDD3 /* CMUUtil.m */,
 				BE1E50C31860B2560051252B /* Images.xcassets */,
+				BE88D0F4187E48FD00EC71C3 /* MXLCalendar */,
 				BE1E50AF1860B2560051252B /* Supporting Files */,
 			);
 			path = Utilikilt;
@@ -253,6 +257,15 @@
 				BE88D0FC187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m */,
 			);
 			name = MXLCalendar;
+			sourceTree = "<group>";
+		};
+		BEEDF0C1187F742F00E01663 /* Finances */ = {
+			isa = PBXGroup;
+			children = (
+				BEEDF0C2187F746200E01663 /* CMUFinancesViewController.h */,
+				BEEDF0C3187F746200E01663 /* CMUFinancesViewController.m */,
+			);
+			name = Finances;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -402,6 +415,7 @@
 				BE88D0FF187E490C00EC71C3 /* MXLCalendarManager.m in Sources */,
 				BE88D0FD187E490C00EC71C3 /* MXLCalendar.m in Sources */,
 				BE1384391877F1F40069ED3C /* CMUFCEViewController.m in Sources */,
+				BEEDF0C4187F746200E01663 /* CMUFinancesViewController.m in Sources */,
 				BE88D0FE187E490C00EC71C3 /* MXLCalendarEvent.m in Sources */,
 				BE1E512C1860CE630051252B /* CMUAuth.m in Sources */,
 				BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */,

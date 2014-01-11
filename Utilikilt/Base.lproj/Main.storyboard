@@ -17,7 +17,48 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fFI-MB-sAS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-964" y="1222"/>
+            <point key="canvasLocation" x="-1468" y="1830"/>
+        </scene>
+        <!--Table View Controller - Finances-->
+        <scene sceneID="hL7-WJ-D2e">
+            <objects>
+                <tableViewController id="bRb-0t-h3u" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="RBc-lI-1rb">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="9B2-t2-vvB">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9B2-t2-vvB" id="1Mh-vo-9Wi">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Finances" id="WGq-oO-yYt"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3H4-zg-GJv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="452" y="1856"/>
+        </scene>
+        <!--Navigation Controller - Finances-->
+        <scene sceneID="lQM-8d-1MU">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="SWH-Is-gzC" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Finances" image="money-25" id="qC7-l7-E6Q"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="NDC-0f-S99">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="bRb-0t-h3u" kind="relationship" relationship="rootViewController" id="zdw-JQ-7vT"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qYF-p1-4oJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-36" y="1856"/>
         </scene>
         <!--Navigation Controller - Courses-->
         <scene sceneID="fm5-zx-fMK">
@@ -47,14 +88,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number, e.g. 15-213" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
-                                <rect key="frame" x="20" y="83" width="280" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number, e.g. 15-213" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
+                                <rect key="frame" x="20" y="110" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZR-Be-rQB">
-                                <rect key="frame" x="252" y="121" width="48" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZR-Be-rQB">
+                                <rect key="frame" x="252" y="148" width="48" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Search">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -63,6 +104,35 @@
                                     <action selector="onSearch:" destination="4aU-Pg-ESC" eventType="touchUpInside" id="6Fl-ds-ANb"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Course search" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Z8-Qr-Evr">
+                                <rect key="frame" x="20" y="81" width="116" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your schedule" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2wg-8G-7Ue">
+                                <rect key="frame" x="20" y="181" width="116" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="hbx-1q-XDb">
+                                <rect key="frame" x="0.0" y="210" width="320" height="308"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SchedulePrototype" rowHeight="88" id="LqV-sC-XRS">
+                                        <rect key="frame" x="0.0" y="22" width="320" height="88"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LqV-sC-XRS">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="87"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -70,12 +140,12 @@
                             <constraint firstAttribute="trailing" secondItem="hZR-Be-rQB" secondAttribute="trailing" constant="20" id="MaS-XW-BOb"/>
                             <constraint firstItem="hZR-Be-rQB" firstAttribute="top" secondItem="ZeE-gl-wZc" secondAttribute="bottom" constant="8" id="UNw-Bw-Wbs"/>
                             <constraint firstAttribute="trailing" secondItem="ZeE-gl-wZc" secondAttribute="trailing" constant="20" id="hWK-LG-1fN"/>
-                            <constraint firstItem="ZeE-gl-wZc" firstAttribute="top" secondItem="Wm2-No-6wC" secondAttribute="bottom" constant="19" id="mk0-AQ-8nV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Courses" id="FBg-4A-ydX"/>
                     <connections>
                         <outlet property="courseField" destination="ZeE-gl-wZc" id="OhK-K3-Pgk"/>
+                        <outlet property="scheduleTable" destination="hbx-1q-XDb" id="wTc-uH-9QN"/>
                         <segue destination="Ak5-DX-vby" kind="push" identifier="CourseDetail" id="FNL-oP-5CT"/>
                     </connections>
                 </viewController>
@@ -272,7 +342,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3qq-4t-Ow8" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-483" y="1222"/>
+            <point key="canvasLocation" x="-987" y="1830"/>
         </scene>
         <!--Navigation Controller - Info-->
         <scene sceneID="rew-Av-Kfm">
@@ -444,11 +514,12 @@
                         <segue destination="pE3-5P-NOK" kind="relationship" relationship="viewControllers" id="4wm-vg-uTe"/>
                         <segue destination="Gjx-pp-llX" kind="relationship" relationship="viewControllers" id="uD8-C4-Dpx"/>
                         <segue destination="DvH-lA-7Nf" kind="relationship" relationship="viewControllers" id="TAw-11-HNs"/>
+                        <segue destination="SWH-Is-gzC" kind="relationship" relationship="viewControllers" id="T6o-Cc-no2"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNP-y4-bzi" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-585" y="425"/>
+            <point key="canvasLocation" x="-1468" y="832"/>
         </scene>
         <!--Navigation Controller - Item-->
         <scene sceneID="reK-sH-SaI">
@@ -584,6 +655,7 @@
         <image name="contact_card-25" width="25" height="25"/>
         <image name="design-25" width="25" height="25"/>
         <image name="literature-25" width="25" height="25"/>
+        <image name="money-25" width="25" height="25"/>
         <image name="second" width="30" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

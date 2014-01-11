@@ -58,12 +58,11 @@
     
     NSString *username = [self.username text];
     NSString *password = [self.password text];
-       
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:username forKey:@"username"];
     [defaults setObject:password forKey:@"password"];
     [defaults synchronize];
-    
     
     [CMUAuth loadAllGrades:^(BOOL didAuth) {
         dispatch_async(dispatch_get_main_queue(), ^{

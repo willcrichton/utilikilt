@@ -559,12 +559,20 @@
                                                       error:&error];
 }
 
++ (NSString*)getKey:(NSString*)rpc inPage:(NSString*)page {
+    NSArray *matches = [self getMatches:page withPattern:[[NSString alloc] initWithFormat:@"'%@',(\\w+),", rpc]];
+    matches = [self getMatches:page withPattern:[[NSString alloc] initWithFormat:@"%@='([^']+)'",
+                                                 [page substringWithRange:[matches[0] rangeAtIndex:1]]]];
+    return [page substringWithRange:[matches[0] rangeAtIndex:1]];
+}
+
 + (void)loadSIO:(void (^)(BOOL))handler {
     __block NSURLSession *session;
     __block NSDictionary *dayMap = @{@"MO": @1, @"TU": @2, @"WE": @3, @"TH": @4, @"FR": @5};
     
     // here we do the gruntwork: do all the RPC calls, extract the necessary data
-    void (^step3)() = ^(NSString *content_key, NSString *schedule_key) {
+    void (^step3)() = ^(NSString *content_key, NSString *finances_key) {
+        
         NSMutableDictionary *info = [[NSMutableDictionary alloc] init];
         NSLock *lock = [[NSLock alloc] init];
         dispatch_group_t group = dispatch_group_create();
@@ -617,6 +625,7 @@
             MXLCalendarManager *manager = [[MXLCalendarManager alloc] init];
             [manager parseICSString:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
               withCompletionHandler:^(MXLCalendar *calendar, NSError *err) {
+                  [lock lock];
                   info[@"schedule"] = [[NSMutableArray alloc] init];
                   
                   for (MXLCalendarEvent *event in calendar.events) {
@@ -639,10 +648,81 @@
                                                      @"start_time": event.eventStartDate,
                                                      @"end_time": event.eventEndDate}];
                   }
+                  [lock unlock];
                   
                   dispatch_group_leave(group);
               }];
         }] resume];
+        
+        [request setURL:[NSURL URLWithString:@"https://s3.as.cmu.edu/sio/sio/finances.rpc"]];
+        body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.sio.student.client.serverproxy.finances.FinancesService|fetchBillingTransactionDTOs|1|2|3|4|0|", finances_key];
+        [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
+        
+        dispatch_group_enter(group);
+        [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            NSArray *json = [self parseGWT:data];
+            NSMutableArray *finances = [[NSMutableArray alloc] initWithArray:json[[json count] - 3]];
+            
+            NSRegularExpression *badRegex = [NSRegularExpression regularExpressionWithPattern:@"^\\d+$" options:kNilOptions error:&error];
+            NSMutableArray *toDiscard = [[NSMutableArray alloc] init];
+            for (int i = 0; i < [finances count]; i++) {
+                NSString *entry = finances[i];
+                NSRange java = [entry rangeOfString:@"java"];
+                if (java.location != NSNotFound ||
+                    [badRegex numberOfMatchesInString:entry options:kNilOptions range:NSMakeRange(0, [entry length])] > 0) {
+                    [toDiscard addObject:entry];
+                }
+            }
+            
+            [finances removeObjectsInArray:toDiscard];
+            
+            NSLog(@"%@", finances);
+            
+            NSRegularExpression *isCode = [NSRegularExpression regularExpressionWithPattern:@"^\\w{3}\\d$" options:kNilOptions error:&error];
+            
+            NSRegularExpression *isNum = [NSRegularExpression regularExpressionWithPattern:@"^-?\\d+\\.\\d+$" options:kNilOptions error:&error];
+            
+            // if on 4 letter code exists negative number, ignore
+            // when see negative number, check if $$ exists, else scan up until find nonempty string (trimmed)
+            
+            NSMutableArray *final = [[NSMutableArray alloc] init];
+            NSMutableDictionary *priceMap = [[NSMutableDictionary alloc] init];
+            
+            for (int i = 3; i < [finances count] - 2; i++) {
+                NSString *entry = finances[i];
+               
+                if ([isCode numberOfMatchesInString:entry options:kNilOptions range:NSMakeRange(0, [entry length])] > 0) {
+                    if ([[finances[i + 2] substringFromIndex:1] isEqualToString:finances[i+1]] ) continue;
+                    priceMap[finances[i+1]] = finances[i-1];
+                    NSLog(@"Standard: %@ %@", finances[i-1], finances[i+1]);
+                    [final addObject:@{@"name": finances[i-1], @"cost": finances[i+1]}];
+                }
+                
+                if ([[entry substringToIndex:1] isEqualToString:@"-"]) {
+                    NSString *name = priceMap[[entry substringFromIndex:1]];
+                    if (name != nil) {
+                        [final addObject:@{@"name": name, @"cost": entry}];
+                        NSLog(@"Mapped: %@ %@", name, entry);
+                    } else {
+                        for (int j = i - 1; j >= 0; j--) {
+                            NSString *oldName = [finances[j] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                            if (![oldName isEqualToString:@""] &&
+                                [isNum numberOfMatchesInString:oldName options:kNilOptions range:NSMakeRange(0, [oldName length])] == 0 &&
+                                [isCode numberOfMatchesInString:oldName options:kNilOptions range:NSMakeRange(0, [oldName length])] == 0) {
+                                [final addObject:@{@"name": oldName, @"cost": entry}];
+                                NSLog(@"Scanned: %@ %@", oldName, entry);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            NSLog(@"%@", final);
+            
+            dispatch_group_leave(group);
+        }] resume];
+        
         
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             [CMUUtil save:info toPath:@"sio_info"];
@@ -656,15 +736,10 @@
     void (^step2)() = ^(NSData *data, NSURLResponse *response, NSError *error) {
         NSString *page = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
-        NSArray *matches = [self getMatches:page withPattern:@"cHi='([^']+)'"];
-        NSString *context_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
+        NSString *context_key = [self getKey:@"userContext.rpc" inPage:page],
+        *content_key = [self getKey:@"bioinfo.rpc" inPage:page],
+        *finances_key = [self getKey:@"finances.rpc" inPage:page];
         
-        matches = [self getMatches:page withPattern:@"BMi='([^']+)'"];
-        NSString *content_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
-        
-        matches = [self getMatches:page withPattern:@"KRi='([^']+)'"];
-        NSString *schedule_key = [page substringWithRange:[matches[0] rangeAtIndex:1]];
-
         NSMutableURLRequest *request = [self newRequest:@"https://s3.as.cmu.edu/sio/sio/userContext.rpc"];
         NSString *body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.common.client.serverproxy.user.UserContextService|initUserContext|1|2|3|4|0|", context_key];
         [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
@@ -673,7 +748,7 @@
         [request setValue:@"text/x-gwt-rpc; charset=UTF-8" forHTTPHeaderField:@"Content-Type"];
         
         [[session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            step3(content_key, schedule_key);
+            step3(content_key, finances_key);
         }] resume];
     };
     
@@ -756,14 +831,10 @@
     }] resume];
     
     dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-        NSDictionary *data = @{@"course": courseData[@"course"],
+        NSDictionary *data = @{@"course": courseData[@"course"] == nil ? [NSNull null] : courseData[@"course"],
                                @"fce": [courseFCE count] == 0 ? [NSNull null] : courseFCE[courseName]};
         if (handler != nil) {
-            if (courseData != nil) {
-                handler(data);
-            } else {
-                handler((NSDictionary*)[NSNull null]);
-            }
+            handler(data);
         }
     });
 }
