@@ -550,6 +550,7 @@
 
 // turn a GWT RPC (Google Web Toolkit + Remote Procedure Call) response into JSON
 + (NSArray*)parseGWT:(NSData*)data {
+    // todo: error check if invalid data?
     NSError *error;
     NSString *output = [[[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
                          substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""]
@@ -653,7 +654,9 @@
                   dispatch_group_leave(group);
               }];
         }] resume];
-        
+       
+        /*** TODO: figure out finances 
+         
         [request setURL:[NSURL URLWithString:@"https://s3.as.cmu.edu/sio/sio/finances.rpc"]];
         body = [[NSString alloc] initWithFormat:@"7|0|4|https://s3.as.cmu.edu/sio/sio/|%@|edu.cmu.s3.ui.sio.student.client.serverproxy.finances.FinancesService|fetchBillingTransactionDTOs|1|2|3|4|0|", finances_key];
         [request setHTTPBody:[NSData dataWithBytes:[body UTF8String] length:strlen([body UTF8String])]];
@@ -722,7 +725,7 @@
             
             dispatch_group_leave(group);
         }] resume];
-        
+        ***/
         
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             [CMUUtil save:info toPath:@"sio_info"];

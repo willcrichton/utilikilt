@@ -38,8 +38,6 @@
             forControlEvents:UIControlEventValueChanged];
     
     self.selected = 0;
-    
-    [CMUAuth loadSIO:nil];
 }
 
 

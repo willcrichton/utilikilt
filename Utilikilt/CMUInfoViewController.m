@@ -63,6 +63,18 @@
     [CMUAuth finger:self.studentSearch.text withHandler:^(NSArray *info) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud hide:YES];
+            
+            if (info == nil || [info count] == 0) {
+                NSLog(@"%@", info);
+                [[[UIAlertView alloc] initWithTitle:@"Student not found"
+                                            message:@"Make sure the Andrew ID was entered correctly."
+                                           delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil]
+                 show];
+                return;
+            }
+            
             self.info = info;
             [self performSegueWithIdentifier:@"Finger" sender:self];
         });         

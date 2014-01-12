@@ -88,13 +88,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number, e.g. 15-213" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter a course number, e.g. 15-213" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeE-gl-wZc">
                                 <rect key="frame" x="20" y="110" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZR-Be-rQB">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZR-Be-rQB">
                                 <rect key="frame" x="252" y="148" width="48" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Search">
@@ -104,21 +104,24 @@
                                     <action selector="onSearch:" destination="4aU-Pg-ESC" eventType="touchUpInside" id="6Fl-ds-ANb"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Course search" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Z8-Qr-Evr">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Course search" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Z8-Qr-Evr">
                                 <rect key="frame" x="20" y="81" width="116" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="116" id="YT4-ih-alN"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Your schedule" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2wg-8G-7Ue">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your schedule" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2wg-8G-7Ue">
                                 <rect key="frame" x="20" y="181" width="116" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="hbx-1q-XDb">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="88" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="hbx-1q-XDb">
                                 <rect key="frame" x="0.0" y="210" width="320" height="308"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -126,7 +129,7 @@
                                     <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SchedulePrototype" rowHeight="88" id="LqV-sC-XRS">
                                         <rect key="frame" x="0.0" y="22" width="320" height="88"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LqV-sC-XRS">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LqV-sC-XRS" id="oSI-57-3RU">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="87"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -136,10 +139,20 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="ZeE-gl-wZc" firstAttribute="leading" secondItem="3Z8-Qr-Evr" secondAttribute="leading" id="1IN-bj-aJo"/>
                             <constraint firstItem="ZeE-gl-wZc" firstAttribute="leading" secondItem="He2-mA-qfl" secondAttribute="leading" constant="20" id="8PU-kB-fF6"/>
+                            <constraint firstItem="3Z8-Qr-Evr" firstAttribute="trailing" secondItem="2wg-8G-7Ue" secondAttribute="trailing" id="Dun-g7-8Cr"/>
+                            <constraint firstItem="hbx-1q-XDb" firstAttribute="top" secondItem="2wg-8G-7Ue" secondAttribute="bottom" constant="8" symbolic="YES" id="GBm-R5-lwV"/>
+                            <constraint firstItem="3Z8-Qr-Evr" firstAttribute="top" secondItem="Wm2-No-6wC" secondAttribute="bottom" constant="17" id="GBm-Vq-ZZX"/>
                             <constraint firstAttribute="trailing" secondItem="hZR-Be-rQB" secondAttribute="trailing" constant="20" id="MaS-XW-BOb"/>
+                            <constraint firstItem="ZeE-gl-wZc" firstAttribute="top" secondItem="3Z8-Qr-Evr" secondAttribute="bottom" constant="8" symbolic="YES" id="PbD-qY-CV0"/>
+                            <constraint firstItem="hbx-1q-XDb" firstAttribute="leading" secondItem="He2-mA-qfl" secondAttribute="leading" id="Shj-Kh-pXh"/>
                             <constraint firstItem="hZR-Be-rQB" firstAttribute="top" secondItem="ZeE-gl-wZc" secondAttribute="bottom" constant="8" id="UNw-Bw-Wbs"/>
+                            <constraint firstItem="hbx-1q-XDb" firstAttribute="top" secondItem="hZR-Be-rQB" secondAttribute="bottom" constant="32" id="b51-lu-Lz5"/>
+                            <constraint firstItem="ZeE-gl-wZc" firstAttribute="centerX" secondItem="hbx-1q-XDb" secondAttribute="centerX" id="dN3-cD-qbr"/>
                             <constraint firstAttribute="trailing" secondItem="ZeE-gl-wZc" secondAttribute="trailing" constant="20" id="hWK-LG-1fN"/>
+                            <constraint firstItem="b2R-re-YTa" firstAttribute="top" secondItem="hbx-1q-XDb" secondAttribute="bottom" constant="1" id="lR8-DH-8mz"/>
+                            <constraint firstItem="ZeE-gl-wZc" firstAttribute="leading" secondItem="2wg-8G-7Ue" secondAttribute="leading" id="mbf-Pd-sna"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Courses" id="FBg-4A-ydX"/>
@@ -514,7 +527,6 @@
                         <segue destination="pE3-5P-NOK" kind="relationship" relationship="viewControllers" id="4wm-vg-uTe"/>
                         <segue destination="Gjx-pp-llX" kind="relationship" relationship="viewControllers" id="uD8-C4-Dpx"/>
                         <segue destination="DvH-lA-7Nf" kind="relationship" relationship="viewControllers" id="TAw-11-HNs"/>
-                        <segue destination="SWH-Is-gzC" kind="relationship" relationship="viewControllers" id="T6o-Cc-no2"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNP-y4-bzi" sceneMemberID="firstResponder"/>
