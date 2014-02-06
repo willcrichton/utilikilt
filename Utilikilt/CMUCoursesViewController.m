@@ -131,10 +131,12 @@
     
     [nameLabel setText:[days componentsJoinedByString:@"/"]];
     
-    [cell addSubview:lecLabel];
-    [cell addSubview:timeLabel];
-    [cell addSubview:locLabel];
-    [cell addSubview:nameLabel];
+    [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    [cell.contentView addSubview:lecLabel];
+    [cell.contentView addSubview:timeLabel];
+    [cell.contentView addSubview:locLabel];
+    [cell.contentView addSubview:nameLabel];
     
     return cell;
 }

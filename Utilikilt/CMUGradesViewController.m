@@ -87,8 +87,8 @@
     if (idx == 0) {
         NSArray *grades = [CMUUtil load:@"final_grades"];
         NSDictionary *entry = grades[indexPath.item];
-        cell.textLabel.text = entry[@"course"];
-        cell.detailTextLabel.text = entry[@"grade"];
+        cell.textLabel.text = [[NSString alloc] initWithFormat:@"%@: %@", entry[@"course"], entry[@"grade"]];
+        cell.detailTextLabel.text = [[NSString alloc] initWithFormat:@"%@ '%@", entry[@"semester"], entry[@"year"]];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.accessoryType = UITableViewCellAccessoryNone;
     } else {

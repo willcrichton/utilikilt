@@ -79,7 +79,7 @@
 {
     static NSString *CellIdentifier = @"CoursePrototype";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-
+  
     NSDictionary *lecture = self.courseInfo[@"course"][@"lectures"][indexPath.item];
     
     UILabel *lecLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 20, 300, 20)];
@@ -98,10 +98,13 @@
     nameLabel.textAlignment = NSTextAlignmentRight;
     [nameLabel setText:lecture[@"instructors"]];
     
-    [cell addSubview:lecLabel];
-    [cell addSubview:timeLabel];
-    [cell addSubview:locLabel];
-    [cell addSubview:nameLabel];
+    
+    [[cell.contentView subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    
+    [cell.contentView addSubview:lecLabel];
+    [cell.contentView addSubview:timeLabel];
+    [cell.contentView addSubview:locLabel];
+    [cell.contentView addSubview:nameLabel];
     
     return cell;
 }

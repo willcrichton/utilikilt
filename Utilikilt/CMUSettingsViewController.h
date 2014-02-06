@@ -1,9 +1,9 @@
 //
-//  CMUSecondViewController.h
+//  CMUSettingsViewController.h
 //  Utilikilt
 //
-//  Created by Will Crichton on 12/17/13.
-//  Copyright (c) 2013 Will Crichton. All rights reserved.
+//  Created by Will Crichton on 1/24/14.
+//  Copyright (c) 2014 Will Crichton. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

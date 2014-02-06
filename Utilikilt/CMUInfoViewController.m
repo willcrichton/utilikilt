@@ -51,8 +51,10 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    CMUFingerViewController *controller = [segue destinationViewController];
-    controller.info = self.info;
+    if (![sender isKindOfClass:[UIButton class]]) {
+        CMUFingerViewController *controller = [segue destinationViewController];
+        controller.info = self.info;
+    }
 }
 
 - (IBAction)onSearch:(id)sender {
@@ -85,6 +87,5 @@
     [self onSearch:self];
     return YES;
 }
-
 
 @end

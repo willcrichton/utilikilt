@@ -132,16 +132,19 @@
         for (TFHppleElement* el in [doc searchWithXPathQuery:@"//pre"]) {
             for (NSString* line in [[el text] componentsSeparatedByString:@"\n"]) {
                 NSRegularExpression *regex =
-                [NSRegularExpression regularExpressionWithPattern:@"(\\d+-\\d+) \\w+\\s*\\'\\d+ ((\\w|\\*)+)\\s*(\\d+\\.\\d)\\s*$"
+                [NSRegularExpression regularExpressionWithPattern:@"(\\d+-\\d+) (\\w+)\\s*\\'(\\d+) ((\\w|\\*)+)\\s*(\\d+\\.\\d)\\s*$"
                                                           options:NSRegularExpressionCaseInsensitive
                                                             error:&error];
                 NSArray *matches = [regex matchesInString:line options:0 range:NSMakeRange(0, [line length])];
                 for (NSTextCheckingResult *match in matches) {
-                    NSString *class = [line substringWithRange:[match rangeAtIndex:1]];
-                    NSString *grade = [line substringWithRange:[match rangeAtIndex:2]];
+                    NSString *grade = [line substringWithRange:[match rangeAtIndex:4]];
                     
                     if (![grade isEqualToString:@"*"]) {
-                        [grades addObject:@{@"course":class, @"grade":grade}];
+                        [grades addObject:@{@"course":[line substringWithRange:[match rangeAtIndex:1]],
+                                            @"grade":grade,
+                                            @"semester":[line substringWithRange:[match rangeAtIndex:2]],
+                                            @"year":[line substringWithRange:[match rangeAtIndex:3]]
+                                            }];
                     }
                 }
             }
@@ -149,7 +152,19 @@
         
         // sort in ascending order by course name
         [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
+            NSComparisonResult yearCmp = [obj2[@"year"] caseInsensitiveCompare:obj1[@"year"]],
+            semesterCmp = [obj1[@"semester"] caseInsensitiveCompare:obj2[@"semester"]],
+            nameCmp = [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
+            
+            if (yearCmp == NSOrderedSame) {
+                if (semesterCmp == NSOrderedSame) {
+                    return nameCmp;
+                } else {
+                    return semesterCmp;
+                }
+            } else {
+                return yearCmp;
+            }
         }];
         
         //store the array
@@ -157,7 +172,10 @@
         [CMUUtil save:grades toPath:@"final_grades"];
       
         // Show local notification for any changed grades
-        if ([oldGrades count] > 0) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        if ([oldGrades count] != 0 &&
+            ![[defaults objectForKey:@"grade_notifications"] isEqualToNumber:[NSNumber numberWithBool:NO]]) {
             for (NSDictionary *grade in grades) {
                 for (NSDictionary *oldGrade in oldGrades) {
                     if (![grade[@"course"] isEqualToString:oldGrade[@"course"]] ||
@@ -319,7 +337,10 @@
             [CMUUtil save:grades toPath:@"blackboard_grades"];
 
             // i hate myself for this code O(n^2) code block
-            if ([oldGrades count] != 0) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+            if ([oldGrades count] != 0 &&
+                ![[defaults objectForKey:@"grade_notifications"] isEqualToNumber:[NSNumber numberWithBool:NO]]) {
                 for (NSDictionary *course in grades) {
                     for (NSDictionary *oldCourse in oldGrades) {
                         if ([oldCourse[@"course"] isEqualToString:course[@"course"]]) {
@@ -439,13 +460,16 @@
             NSLog(@"Autolab grades: finished queries.");
             
             [grades sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                return [obj1[@"course"] caseInsensitiveCompare:obj2[@"course"]];
+                return [obj2[@"course"] caseInsensitiveCompare:obj1[@"course"]];
             }];
             
             NSArray *oldGrades = [CMUUtil load:@"autolab_grades"];
             [CMUUtil save:grades toPath:@"autolab_grades"];
             
-            if ([oldGrades count] != 0) {
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            
+            if ([oldGrades count] != 0 &&
+                ![[defaults objectForKey:@"grade_notifications"] isEqualToNumber:[NSNumber numberWithBool:NO]]) {
                 for (NSDictionary *course in grades) {
                     for (NSDictionary *oldCourse in oldGrades) {
                         if ([oldCourse[@"course"] isEqualToString:course[@"course"]]) {
@@ -550,7 +574,6 @@
 
 // turn a GWT RPC (Google Web Toolkit + Remote Procedure Call) response into JSON
 + (NSArray*)parseGWT:(NSData*)data {
-    // todo: error check if invalid data?
     NSError *error;
     NSString *output = [[[[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
                          substringFromIndex:4] stringByReplacingOccurrencesOfString:@"'" withString:@"\""]
@@ -627,7 +650,7 @@
             [manager parseICSString:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
               withCompletionHandler:^(MXLCalendar *calendar, NSError *err) {
                   [lock lock];
-                  info[@"schedule"] = [[NSMutableArray alloc] init];
+                  info[@"schedule"]     = [[NSMutableArray alloc] init];
                   
                   for (MXLCalendarEvent *event in calendar.events) {
                       // event.eventSummary is "Course Name :: ##### A/B"
@@ -643,7 +666,9 @@
                       
                       NSString *location = [event.eventLocation stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                       
-                      [info[@"schedule"] addObject:@{@"name": event.eventSummary,
+                      NSString *summary = [event.eventSummary stringByReplacingOccurrencesOfString:@"\\" withString:@""];
+                      
+                      [info[@"schedule"] addObject:@{@"name": summary,
                                                      @"location": location,
                                                      @"days": dayNums,
                                                      @"start_time": event.eventStartDate,

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		97DE966423AB44C0875C45C5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 666FC41173B74535833D3ED2 /* libPods.a */; };
+		BE0188131892E202006A0224 /* CMUSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE0188121892E202006A0224 /* CMUSettingsViewController.m */; };
 		BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */; };
 		BE1172711874BD0D003D62CE /* CMUCourseDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1172701874BD0D003D62CE /* CMUCourseDetailViewController.m */; };
 		BE1384391877F1F40069ED3C /* CMUFCEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1384381877F1F40069ED3C /* CMUFCEViewController.m */; };
@@ -18,7 +19,7 @@
 		BE1E50B51860B2560051252B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B41860B2560051252B /* main.m */; };
 		BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50B81860B2560051252B /* CMUAppDelegate.m */; };
 		BE1E50BC1860B2560051252B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50BA1860B2560051252B /* Main.storyboard */; };
-		BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50C11860B2560051252B /* CMUSettingsViewController.m */; };
+		BE1E50C21860B2560051252B /* CMULoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BE1E50C11860B2560051252B /* CMULoginViewController.m */; };
 		BE1E50C41860B2560051252B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE1E50C31860B2560051252B /* Images.xcassets */; };
 		BE1E50CB1860B2560051252B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50CA1860B2560051252B /* XCTest.framework */; };
 		BE1E50CC1860B2560051252B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE1E50A81860B2560051252B /* Foundation.framework */; };
@@ -50,6 +51,8 @@
 
 /* Begin PBXFileReference section */
 		666FC41173B74535833D3ED2 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE0188111892E202006A0224 /* CMUSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUSettingsViewController.h; sourceTree = "<group>"; };
+		BE0188121892E202006A0224 /* CMUSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUSettingsViewController.m; sourceTree = "<group>"; };
 		BE07A3F918714CB3006AECEE /* CMUDrilldownViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUDrilldownViewController.h; sourceTree = "<group>"; };
 		BE07A3FA18714CB3006AECEE /* CMUDrilldownViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMUDrilldownViewController.m; sourceTree = "<group>"; };
 		BE11726F1874BD0D003D62CE /* CMUCourseDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMUCourseDetailViewController.h; sourceTree = "<group>"; };
@@ -67,8 +70,8 @@
 		BE1E50B71860B2560051252B /* CMUAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUAppDelegate.h; sourceTree = "<group>"; };
 		BE1E50B81860B2560051252B /* CMUAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUAppDelegate.m; sourceTree = "<group>"; };
 		BE1E50BB1860B2560051252B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		BE1E50C01860B2560051252B /* CMUSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMUSettingsViewController.h; sourceTree = "<group>"; };
-		BE1E50C11860B2560051252B /* CMUSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMUSettingsViewController.m; sourceTree = "<group>"; };
+		BE1E50C01860B2560051252B /* CMULoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CMULoginViewController.h; sourceTree = "<group>"; };
+		BE1E50C11860B2560051252B /* CMULoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CMULoginViewController.m; sourceTree = "<group>"; };
 		BE1E50C31860B2560051252B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		BE1E50C91860B2560051252B /* UtilikiltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UtilikiltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE1E50CA1860B2560051252B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -125,6 +128,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BE0188101892E1DC006A0224 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BE0188111892E202006A0224 /* CMUSettingsViewController.h */,
+				BE0188121892E202006A0224 /* CMUSettingsViewController.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		BE1384351877F1920069ED3C /* Grades */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,11 +200,12 @@
 				BE1384361877F1A30069ED3C /* Courses */,
 				BE8719FD187CDBE80084DE08 /* Info */,
 				BEEDF0C1187F742F00E01663 /* Finances */,
+				BE0188101892E1DC006A0224 /* Settings */,
 				BE1E50B71860B2560051252B /* CMUAppDelegate.h */,
 				BE1E50B81860B2560051252B /* CMUAppDelegate.m */,
 				BE1E50BA1860B2560051252B /* Main.storyboard */,
-				BE1E50C01860B2560051252B /* CMUSettingsViewController.h */,
-				BE1E50C11860B2560051252B /* CMUSettingsViewController.m */,
+				BE1E50C01860B2560051252B /* CMULoginViewController.h */,
+				BE1E50C11860B2560051252B /* CMULoginViewController.m */,
 				BE1E512A1860CE630051252B /* CMUAuth.h */,
 				BE1E512B1860CE630051252B /* CMUAuth.m */,
 				BEC84673187B960800D0FDD3 /* CMUUtil.h */,
@@ -405,7 +418,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BE1E50E21860B4D90051252B /* CMUGradesViewController.m in Sources */,
-				BE1E50C21860B2560051252B /* CMUSettingsViewController.m in Sources */,
+				BE1E50C21860B2560051252B /* CMULoginViewController.m in Sources */,
 				BE1E50B91860B2560051252B /* CMUAppDelegate.m in Sources */,
 				BEEDF0C0187F318300E01663 /* CMUCoursesViewController.m in Sources */,
 				BE88D0F3187E24A900EC71C3 /* CMUFingerViewController.m in Sources */,
@@ -421,6 +434,7 @@
 				BE07A3FB18714CB3006AECEE /* CMUDrilldownViewController.m in Sources */,
 				BE8719FC187CDBD30084DE08 /* CMUInfoViewController.m in Sources */,
 				BE88D100187E490C00EC71C3 /* NSTimeZone+ProperAbbreviation.m in Sources */,
+				BE0188131892E202006A0224 /* CMUSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,13 +562,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utilikilt/Utilikilt-Prefix.pch";
 				INFOPLIST_FILE = "Utilikilt/Utilikilt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "874534B0-C15A-476B-A7D6-B0497C6EE738";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -565,13 +580,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: William Crichton (X737TJC72H)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: William Crichton (X737TJC72H)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Utilikilt/Utilikilt-Prefix.pch";
 				INFOPLIST_FILE = "Utilikilt/Utilikilt-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "874534B0-C15A-476B-A7D6-B0497C6EE738";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

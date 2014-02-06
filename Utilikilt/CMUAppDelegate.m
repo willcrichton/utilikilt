@@ -14,13 +14,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [NSTimer scheduledTimerWithTimeInterval:120 target:self selector:@selector(loadGrades) userInfo:nil repeats:YES];
     
+    [application setMinimumBackgroundFetchInterval:60.0];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"username"] == nil) {
-        [self performSelector:@selector(showSettings) withObject:nil afterDelay:0.1];
+    if ([defaults objectForKey:@"remember_login"] == nil) {
+        [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"remember_login"];
+        [defaults setObject:[NSNumber numberWithBool:YES] forKey:@"grade_notifications"];
+        [defaults synchronize];
     }
-
+    
     return YES;
 }
 
@@ -29,10 +31,16 @@
     [root performSegueWithIdentifier:@"Settings" sender:self];
 }
 
-- (void)loadGrades {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [CMUAuth loadAllGrades:nil];
-    });
+- (void)application:(UIApplication*)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([[defaults objectForKey:@"remember_login"] isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+        completionHandler(UIBackgroundFetchResultNoData);
+    } else {
+        [CMUAuth loadAllGrades:^(BOOL b) {
+            completionHandler(b ? UIBackgroundFetchResultNewData : UIBackgroundFetchResultFailed);
+        }];
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -45,21 +53,34 @@
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    if([[defaults objectForKey:@"remember_login"] isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+        [defaults setObject:@"" forKey:@"username"];
+        [defaults setObject:@"" forKey:@"password"];
+        [defaults synchronize];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"username"] == nil || [[defaults objectForKey:@"username"] isEqualToString:@""]) {
+        [self performSelector:@selector(showSettings) withObject:nil afterDelay:0.1];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+ 
 }
 
 @end
